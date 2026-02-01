@@ -1,0 +1,110 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
+
+type Post = {
+	id: number;
+	slug: string;
+	title: { rendered: string };
+	excerpt?: { rendered?: string };
+	content?: { rendered?: string };
+	date?: string;
+	_embedded?: {
+		['wp:featuredmedia']?: Array<{ source_url?: string; alt_text?: string }>;
+	};
+};
+
+const sanitizeExcerpt = (html: string = '') =>
+	html
+		.replace(/<[^>]*>/g, ' ')
+		.replace(/&nbsp;/g, ' ')
+		.replace(/&amp;/g, '&')
+		.replace(/&quot;/g, '"')
+		.replace(/&#39;/g, "'")
+		.replace(/\s+/g, ' ')
+		.trim();
+
+const getExcerpt = (post: Post, maxLength = 200) => {
+	const raw = post?.excerpt?.rendered || post?.content?.rendered || '';
+	const clean = sanitizeExcerpt(raw);
+	if (!clean) return '';
+	if (clean.length <= maxLength) return clean;
+	const trimmed = clean.slice(0, maxLength);
+	const lastSpace = trimmed.lastIndexOf(' ');
+	return `${trimmed.slice(0, lastSpace > 0 ? lastSpace : maxLength).trim()}…`;
+};
+
+let posts: Post[] = [];
+let loadError: string | null = null;
+
+try {
+	const perPage = 12;
+	const res = await fetch(`${WP_BASE}/wp-json/wp/v2/posts?_embed&per_page=${perPage}`, {
+		headers: { Accept: 'application/json' },
+	});
+	if (!res.ok) throw new Error(`WP ${res.status}`);
+	posts = (await res.json()) as Post[];
+} catch (e) {
+	loadError = e instanceof Error ? e.message : 'Error desconocido';
+}
+const hero = {
+	title: 'Artículos',
+	backgroundImage: '/bg-title2.jpg',
+};
+---
+
+<Layout hero={hero}>
+	<section class="section">
+		<div class="container">
+			<h1 class="page-title">Nuestros Artículos</h1>
+
+			{loadError ? (
+				<p style="margin: 0; color: rgba(185, 28, 28, 0.9);">No se pudo cargar desde WordPress ({WP_BASE}). Error: {loadError}</p>
+			) : posts.length === 0 ? (
+				<p style="margin: 0; color: var(--muted);">Aún no hay artículos.</p>
+			) : (
+				<div class="grid" style="display: grid; gap: 18px; grid-template-columns: repeat(5, minmax(0, 1fr));">
+					{posts.map((post) => {
+						const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+						const alt = post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? post.title?.rendered;
+						const excerpt = getExcerpt(post);
+						const url = `/articulos/${post.slug}`;
+						return (
+							<article class="card" style="overflow: hidden;">
+								<a href={url} style="display: block; text-decoration: none; color: inherit;">
+									{image ? (
+										<img
+											src={image}
+											alt={alt}
+											loading="lazy"
+											style="width: 100%; height: 200px; object-fit: cover; display: block; border-bottom: 1px solid var(--border);"
+										/>
+									) : null}
+									<div style="padding: 18px; display: grid; gap: 10px;">
+										<h2 style="margin: 0; font-size: 20px; line-height: 1.22; letter-spacing: -0.01em;" set:html={post.title?.rendered} />
+										<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(34, 211, 238, 0.95);">Leer artículo</span>
+									</div>
+								</a>
+							</article>
+						);
+					})}
+				</div>
+			)}
+		</div>
+	</section>
+</Layout>
+
+<style>
+	@media (max-width: 980px) {
+		.grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.grid {
+			grid-template-columns: 1fr !important;
+		}
+	}
+</style>

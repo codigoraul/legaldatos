@@ -1,0 +1,145 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+	<div class="container footer-grid">
+		<div class="col">
+			<a class="brand" href="/inicio" aria-label="LegalDatos">
+				<span class="brand-mark">LD</span>
+				<span class="brand-text">LegalDatos</span>
+			</a>
+			<p class="desc">
+				Nos especializamos en soluciones legales y cumplimiento para el tratamiento de datos.
+			</p>
+			<a class="link" href="/nosotros">Nosotros</a>
+		</div>
+
+		<div class="col">
+			<h3 class="title">Nuestros servicios</h3>
+			<a class="link" href="/servicios">Ver servicios</a>
+			<a class="link" href="/contacto">Solicitar asesoría</a>
+		</div>
+
+		<div class="col">
+			<h3 class="title">Datos de contacto</h3>
+			<a class="link" href="mailto:contacto@legaldatos.cl">contacto@legaldatos.cl</a>
+			<a class="link" href="/contacto">Formulario de contacto</a>
+		</div>
+
+		<div class="col">
+			<h3 class="title">Redes</h3>
+			<a class="link" href="https://www.linkedin.com/company/legaldatoscl/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+			<a class="link" href="https://www.instagram.com/legaldatos" target="_blank" rel="noopener noreferrer">Instagram</a>
+		</div>
+	</div>
+
+	<div class="container bottom">
+		<p class="copyright">© {year} LegalDatos. Todos los derechos reservados.</p>
+		<a class="link" href="/pol%C3%ADtica-de-privacidad">Política de Privacidad</a>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		background: #0C1630;
+		padding-top: 44px;
+		padding-bottom: 28px;
+	}
+
+	.footer-grid {
+		display: grid;
+		grid-template-columns: 1.2fr 1fr 1fr 0.8fr;
+		gap: 24px;
+		align-items: start;
+	}
+
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		text-decoration: none;
+		color: rgba(255, 255, 255, 0.95);
+		font-weight: 700;
+		letter-spacing: -0.02em;
+	}
+
+	.brand-mark {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 10px;
+		background: var(--accent);
+		color: #0C1630;
+		font-size: 14px;
+		font-weight: 800;
+	}
+
+	.brand-text {
+		font-size: 16px;
+	}
+
+	.desc {
+		margin: 14px 0;
+		color: rgba(255, 255, 255, 0.65);
+		line-height: 1.6;
+		max-width: 40ch;
+	}
+
+	.title {
+		margin: 0 0 12px;
+		font-size: 14px;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.9);
+	}
+
+	.col {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.link {
+		color: rgba(255, 255, 255, 0.6);
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 14px;
+		transition: color 0.2s ease;
+	}
+
+	.link:hover {
+		color: var(--accent);
+		text-decoration: underline;
+	}
+
+	.bottom {
+		margin-top: 28px;
+		padding-top: 18px;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		display: flex;
+		gap: 12px;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+	}
+
+	.copyright {
+		margin: 0;
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 14px;
+	}
+
+	@media (max-width: 860px) {
+		.footer-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.desc {
+			max-width: none;
+		}
+	}
+</style>

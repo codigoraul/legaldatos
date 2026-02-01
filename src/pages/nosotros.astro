@@ -1,0 +1,274 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout showHero={false}>
+	<section class="hero">
+		<div class="container hero-inner">
+			<h1>
+				Experiencia Corporativa
+				<br />
+				al Servicio de tus <span class="accent">Datos</span>
+			</h1>
+
+			<div class="hero-card">
+				<p class="hero-lead">
+					<strong>LegalDatos</strong> es una división del estudio jurídico
+					<span class="accent"> Manríquez Rivera</span>.
+				</p>
+				<div class="divider" aria-hidden="true"></div>
+				<p>
+					Nuestra consultora ofrece asesorías con todo tipo de organizaciones en la adopción de mejores prácticas
+					para la protección de datos, integrando la actual normativa de datos personales y compliance de datos en
+					el núcleo de su gobernanza.
+				</p>
+				<p>
+					Estructuramos planes que cumplen con la ley actual y brindamos soporte constante a tus equipos,
+					asegurando que la vigilancia y ejecución de estas medidas perduren en el tiempo.
+				</p>
+			</div>
+		</div>
+
+		<svg class="wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+			<path
+				d="M0,96L80,90.7C160,85,320,75,480,69.3C640,64,800,64,960,69.3C1120,75,1280,85,1360,90.7L1440,96L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"
+				fill="#ffffff"
+			/>
+		</svg>
+	</section>
+
+	<section class="section">
+		<div class="container two-col">
+			<div class="photo">
+				<img src="/daniel-manriquez.jpg" alt="Daniel Manríquez Sansigolo" loading="lazy" />
+				<div class="photo-cap">
+					<div class="name">Daniel Manríquez Sansigolo</div>
+					<div class="role">Socio Fundador | Director Legal</div>
+				</div>
+			</div>
+			<div class="content">
+				<div class="eyebrow">
+					<span class="icon" aria-hidden="true"></span>
+					<span>Dirección Legal</span>
+				</div>
+				<p class="p">
+					Abogado de larga trayectoria asesorando empresas en asuntos corporativos complejos, compliance y
+					comunicaciones estratégicas.
+				</p>
+				<p class="p">
+					Durante su especialización en Derecho Corporativo, Daniel identificó tempranamente que el activo más
+					crítico —y riesgoso— de la empresa moderna ya no eran solo sus finanzas, sino sus datos. Esta visión lo
+					llevó a reenfocar su práctica, combinando la rigurosidad del abogado de empresa con la agilidad que exige
+					la nueva normativa de privacidad.
+				</p>
+
+				<div class="callout">
+					<h3>Antecedentes Académicos</h3>
+					<p>
+						Su trabajo final de Magíster,
+						<span class="accent"> “El Compliance de Datos en Asociaciones Gremiales”</span>, abordó los desafíos
+						actuales de la privacidad en el sector corporativo.
+					</p>
+				</div>
+
+				<h3 class="h3">Trayectoria Profesional</h3>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		position: relative;
+		padding: 82px 0 0;
+		min-height: 640px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		color: rgba(255, 255, 255, 0.95);
+		background:
+			linear-gradient(180deg, rgba(6, 16, 32, 0.92), rgba(6, 16, 32, 0.78)),
+			radial-gradient(900px 520px at 70% 25%, rgba(34, 211, 238, 0.16), transparent 58%),
+			radial-gradient(760px 520px at 18% 36%, rgba(34, 211, 238, 0.10), transparent 62%),
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700' viewBox='0 0 1200 700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%2322D3EE' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='%23A855F7' stop-opacity='.25'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23g)' stroke-opacity='.35' stroke-width='2'%3E%3Cpath d='M120 520 L260 420 L420 500 L560 380 L720 440 L900 320 L1080 380'/%3E%3Cpath d='M160 240 L310 310 L480 240 L640 300 L820 220 L980 260'/%3E%3Cpath d='M220 610 L360 560 L520 620 L700 560 L860 610'/%3E%3C/g%3E%3Cg%3E%3Cg fill='%23ffffff' fill-opacity='.08'%3E%3Ccircle cx='120' cy='520' r='10'/%3E%3Ccircle cx='260' cy='420' r='7'/%3E%3Ccircle cx='420' cy='500' r='9'/%3E%3Ccircle cx='560' cy='380' r='8'/%3E%3Ccircle cx='720' cy='440' r='9'/%3E%3Ccircle cx='900' cy='320' r='10'/%3E%3Ccircle cx='1080' cy='380' r='8'/%3E%3Ccircle cx='160' cy='240' r='8'/%3E%3Ccircle cx='310' cy='310' r='10'/%3E%3Ccircle cx='480' cy='240' r='9'/%3E%3Ccircle cx='640' cy='300' r='8'/%3E%3Ccircle cx='820' cy='220' r='9'/%3E%3Ccircle cx='980' cy='260' r='8'/%3E%3C/g%3E%3Cg fill='%2322D3EE' fill-opacity='.10'%3E%3Ccircle cx='720' cy='440' r='18'/%3E%3Ccircle cx='310' cy='310' r='16'/%3E%3Ccircle cx='900' cy='320' r='16'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+		background-size: cover;
+		background-position: center;
+	}
+
+	.hero-inner {
+		padding-bottom: 92px;
+		max-width: 980px;
+	}
+
+	h1 {
+		margin: 0;
+		font-size: 64px;
+		line-height: 1.05;
+		letter-spacing: -0.02em;
+		font-weight: 800;
+	}
+
+	.accent {
+		color: var(--accent);
+	}
+
+	.hero-card {
+		margin: 24px auto 0;
+		max-width: 620px;
+		padding: 22px 22px;
+		border-radius: 16px;
+		background: rgba(6, 16, 32, 0.35);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		backdrop-filter: blur(10px);
+	}
+
+	.hero-lead {
+		margin: 0;
+		font-size: 14px;
+		line-height: 1.7;
+		color: rgba(255, 255, 255, 0.86);
+	}
+
+	.hero-card p {
+		margin: 14px 0 0;
+		font-size: 13px;
+		line-height: 1.8;
+		color: rgba(255, 255, 255, 0.72);
+	}
+
+	.divider {
+		width: 44px;
+		height: 3px;
+		border-radius: 999px;
+		background: rgba(34, 211, 238, 0.7);
+		margin: 12px auto 0;
+	}
+
+	.wave {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: -1px;
+		width: 100%;
+		height: 120px;
+		display: block;
+	}
+
+	.two-col {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 28px;
+		align-items: start;
+		padding-top: 18px;
+		padding-bottom: 72px;
+	}
+
+	.photo {
+		position: relative;
+		border-radius: 16px;
+		overflow: hidden;
+		box-shadow: 0 18px 50px rgba(2, 6, 23, 0.15);
+		background: rgba(2, 6, 23, 0.06);
+	}
+
+	.photo img {
+		display: block;
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+	}
+
+	.photo-cap {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		padding: 16px 16px;
+		background: linear-gradient(180deg, transparent, rgba(6, 16, 32, 0.9));
+		color: rgba(255, 255, 255, 0.95);
+	}
+
+	.name {
+		font-weight: 800;
+		letter-spacing: -0.02em;
+	}
+
+	.role {
+		margin-top: 4px;
+		font-size: 12px;
+		color: rgba(34, 211, 238, 0.9);
+		font-weight: 700;
+	}
+
+	.content {
+		padding-top: 12px;
+	}
+
+	.eyebrow {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		font-weight: 800;
+		color: var(--text);
+		margin-bottom: 12px;
+	}
+
+	.icon {
+		width: 26px;
+		height: 26px;
+		border-radius: 999px;
+		background: rgba(34, 211, 238, 0.18);
+		border: 1px solid rgba(34, 211, 238, 0.28);
+		display: inline-block;
+	}
+
+	.p {
+		margin: 0 0 12px;
+		color: var(--muted);
+		line-height: 1.75;
+	}
+
+	.callout {
+		margin-top: 18px;
+		padding: 16px 16px;
+		border-radius: 14px;
+		border: 1px solid rgba(34, 211, 238, 0.45);
+		background: rgba(34, 211, 238, 0.08);
+	}
+
+	.callout h3 {
+		margin: 0 0 8px;
+		font-size: 14px;
+		letter-spacing: -0.01em;
+	}
+
+	.callout p {
+		margin: 0;
+		color: var(--muted);
+		line-height: 1.75;
+		font-size: 13px;
+	}
+
+	.h3 {
+		margin: 18px 0 0;
+		font-size: 14px;
+		letter-spacing: -0.01em;
+	}
+
+	@media (max-width: 900px) {
+		.two-col {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 720px) {
+		h1 {
+			font-size: 42px;
+		}
+		.hero {
+			min-height: 560px;
+			padding-top: 60px;
+		}
+	}
+</style>

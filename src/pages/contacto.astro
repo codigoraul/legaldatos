@@ -1,0 +1,325 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
+
+type ContactInfo = {
+	email?: string;
+	phone?: string;
+	address?: string;
+	hours?: string;
+};
+
+const fallback: Required<ContactInfo> = {
+	email: 'contacto@legaldatos.cl',
+	phone: '+56 9 68434272',
+	address: 'Huérfanos 757, Oficina 614\nSantiago Centro',
+	hours: 'Lunes a Viernes 9:00 - 18:00',
+};
+
+const tryFetchJson = async (url: string) => {
+	const res = await fetch(url, { headers: { Accept: 'application/json' } });
+	if (!res.ok) throw new Error(`HTTP ${res.status}`);
+	return res.json();
+};
+
+let info: Required<ContactInfo> = fallback;
+
+try {
+	const candidates = [
+		`${WP_BASE}/wp-json/legaldatos/v1/contacto`,
+		`${WP_BASE}/wp-json/legaldatos/v1/contact`,
+		`${WP_BASE}/wp-json/wp/v2/contacto`,
+		`${WP_BASE}/wp-json/wp/v2/contact`,
+		`${WP_BASE}/wp-json/wp/v2/pages?slug=contacto`,
+	];
+
+	let data: any = null;
+	for (const url of candidates) {
+		try {
+			data = await tryFetchJson(url);
+			break;
+		} catch {
+			// ignore
+		}
+	}
+
+	const acf = Array.isArray(data) ? data?.[0]?.acf : data?.acf;
+	const source = acf ?? data;
+
+	const email = source?.email ?? source?.correo ?? source?.contact_email;
+	const phone = source?.telefono ?? source?.phone ?? source?.contact_phone;
+	const address = source?.direccion ?? source?.address ?? source?.contact_address;
+	const hours = source?.horario ?? source?.hours ?? source?.contact_hours;
+
+	info = {
+		email: typeof email === 'string' && email.trim() ? email.trim() : fallback.email,
+		phone: typeof phone === 'string' && phone.trim() ? phone.trim() : fallback.phone,
+		address: typeof address === 'string' && address.trim() ? address.trim() : fallback.address,
+		hours: typeof hours === 'string' && hours.trim() ? hours.trim() : fallback.hours,
+	};
+} catch {
+	info = fallback;
+}
+
+const hero = {
+	title: 'Contacto',
+	backgroundImage: '/bg-title.jpg',
+};
+---
+
+<Layout hero={hero}>
+	<section class="section contact-body">
+		<div class="container">
+			<h1 class="page-title" style="padding-top: 28px; padding-bottom: 12px;">Canales de Contacto</h1>
+
+			<div class="grid">
+				<div class="panel">
+					<h2 class="panel-title">Datos de contacto</h2>
+					<div class="items">
+						<div class="item">
+							<div class="k">Email</div>
+							<a class="v link" href={`mailto:${info.email}`}>{info.email}</a>
+						</div>
+						<div class="item">
+							<div class="k">Teléfono</div>
+							<a class="v link" href={`tel:${info.phone.replace(/\s+/g, '')}`}>{info.phone}</a>
+						</div>
+						<div class="item">
+							<div class="k">Dirección</div>
+							<div class="v" style="white-space: pre-line;">{info.address}</div>
+						</div>
+						<div class="item">
+							<div class="k">Horario</div>
+							<div class="v">{info.hours}</div>
+						</div>
+					</div>
+
+					<div class="meta">
+						<div class="tag">Protección de datos</div>
+						<div class="tag">Cumplimiento</div>
+						<div class="tag">Ley 21.719</div>
+					</div>
+				</div>
+
+				<div class="panel">
+					<h2 class="panel-title">Enviar mensaje</h2>
+					<form
+						class="form"
+						action={`mailto:${info.email}`}
+						method="post"
+						enctype="text/plain"
+					>
+						<div class="row">
+							<label class="field">
+								<span class="label">Nombre</span>
+								<input name="Nombre" type="text" required placeholder="Tu nombre" />
+							</label>
+							<label class="field">
+								<span class="label">Email</span>
+								<input name="Email" type="email" required placeholder="tu@correo.com" />
+							</label>
+						</div>
+
+						<label class="field">
+							<span class="label">Asunto</span>
+							<input name="Asunto" type="text" required placeholder="Ej: Consulta por cumplimiento" />
+						</label>
+
+						<label class="field">
+							<span class="label">Mensaje</span>
+							<textarea name="Mensaje" required rows={7} placeholder="Cuéntanos tu caso y contexto (empresa, industria, urgencia, etc.)"></textarea>
+						</label>
+
+						<div class="actions">
+							<button class="btn btn-primary" type="submit">Enviar</button>
+							<p class="hint">Se abrirá tu cliente de correo para enviar el mensaje.</p>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.page-subtitle {
+		margin: 10px auto 0;
+		max-width: 70ch;
+		color: var(--muted);
+		font-size: 16px;
+		line-height: 1.7;
+	}
+
+	.contact-body {
+		padding-top: 28px;
+		padding-bottom: 72px;
+		background:
+			radial-gradient(900px 520px at 10% 0%, rgba(34, 211, 238, 0.14), transparent 55%),
+			radial-gradient(860px 540px at 100% 12%, rgba(42, 55, 85, 0.10), transparent 60%),
+			linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(247, 249, 252, 0.65));
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: 0.95fr 1.05fr;
+		gap: 18px;
+		align-items: start;
+	}
+
+	.panel {
+		background: rgba(255, 255, 255, 0.75);
+		border: 1px solid rgba(15, 23, 42, 0.10);
+		border-radius: 22px;
+		box-shadow: 0 18px 60px rgba(2, 6, 23, 0.10);
+		backdrop-filter: blur(12px);
+		padding: 22px;
+	}
+
+	.panel-title {
+		margin: 0 0 14px;
+		font-size: 14px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgba(42, 55, 85, 0.92);
+	}
+
+	.items {
+		display: grid;
+		gap: 12px;
+	}
+
+	.item {
+		padding: 14px 14px;
+		border-radius: 16px;
+		background: rgba(247, 249, 252, 0.85);
+		border: 1px solid rgba(15, 23, 42, 0.08);
+	}
+
+	.k {
+		font-size: 12px;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: rgba(15, 23, 42, 0.6);
+		font-weight: 700;
+		margin-bottom: 6px;
+	}
+
+	.v {
+		font-size: 16px;
+		color: rgba(15, 23, 42, 0.9);
+		font-weight: 650;
+		line-height: 1.6;
+	}
+
+	.meta {
+		margin-top: 16px;
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	.tag {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 10px;
+		border-radius: 999px;
+		background: rgba(34, 211, 238, 0.10);
+		border: 1px solid rgba(34, 211, 238, 0.20);
+		color: rgba(42, 55, 85, 0.92);
+		font-weight: 750;
+		font-size: 12px;
+		letter-spacing: 0.02em;
+	}
+
+	.form {
+		display: grid;
+		gap: 12px;
+	}
+
+	.row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 12px;
+	}
+
+	.field {
+		display: grid;
+		gap: 8px;
+	}
+
+	.label {
+		font-size: 12px;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: rgba(15, 23, 42, 0.6);
+		font-weight: 800;
+	}
+
+	input,
+	textarea {
+		border-radius: 14px;
+		border: 1px solid rgba(15, 23, 42, 0.14);
+		background: rgba(255, 255, 255, 0.9);
+		padding: 12px 12px;
+		font-size: 16px;
+		font-weight: 600;
+		color: rgba(15, 23, 42, 0.92);
+		outline: none;
+		transition: border-color 160ms ease, box-shadow 160ms ease;
+	}
+
+	textarea {
+		resize: vertical;
+		min-height: 140px;
+	}
+
+	input:focus,
+	textarea:focus {
+		border-color: rgba(34, 211, 238, 0.55);
+		box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.12);
+	}
+
+	.actions {
+		display: flex;
+		gap: 12px;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		margin-top: 4px;
+	}
+
+	.hint {
+		margin: 0;
+		color: var(--muted);
+		font-size: 14px;
+		line-height: 1.5;
+	}
+
+	@media (max-width: 980px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.page-intro {
+			margin: 8px auto 18px;
+		}
+		.page-title {
+			font-size: 28px;
+		}
+		.page-subtitle {
+			font-size: 15px;
+		}
+
+		.panel {
+			padding: 18px;
+		}
+
+		.row {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

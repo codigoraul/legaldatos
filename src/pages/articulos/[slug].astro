@@ -1,0 +1,170 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+type Post = {
+	id: number;
+	slug: string;
+	title: { rendered: string };
+	content: { rendered: string };
+	date?: string;
+	_embedded?: {
+		author?: Array<{ name?: string }>;
+		['wp:featuredmedia']?: Array<{ source_url?: string; alt_text?: string }>;
+	};
+};
+
+export async function getStaticPaths() {
+	const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
+
+	let posts: Post[] = [];
+	const perPage = 100;
+	let page = 1;
+	let totalPages = 1;
+
+	while (page <= totalPages) {
+		const res = await fetch(`${WP_BASE}/wp-json/wp/v2/posts?_embed&per_page=${perPage}&page=${page}`, {
+			headers: { Accept: 'application/json' },
+		});
+		if (!res.ok) {
+			throw new Error(`WP ${res.status}`);
+		}
+		const headerTotalPages = Number(res.headers.get('x-wp-totalpages') ?? '1');
+		totalPages = Number.isFinite(headerTotalPages) && headerTotalPages > 0 ? headerTotalPages : 1;
+
+		const batch = (await res.json()) as Post[];
+		posts = posts.concat(batch);
+		page += 1;
+	}
+
+	return posts.map((post) => ({
+		params: { slug: post.slug },
+		props: { post },
+	}));
+}
+
+const { post } = Astro.props as { post: Post };
+
+if (!post) {
+	throw new Error('Artículo no encontrado');
+}
+
+const title = post.title?.rendered || 'Artículo';
+const content = post.content?.rendered || '<p>Contenido no disponible.</p>';
+
+const sanitizeTitle = (html: string = '') =>
+	html
+		.replace(/<[^>]*>/g, ' ')
+		.replace(/&nbsp;/g, ' ')
+		.replace(/&amp;/g, '&')
+		.replace(/&quot;/g, '"')
+		.replace(/&#39;/g, "'")
+		.replace(/\s+/g, ' ')
+		.trim();
+
+const heroTitle = sanitizeTitle(title) || 'Artículo';
+const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+const author = post._embedded?.author?.[0]?.name;
+const date = post.date ? new Date(post.date) : null;
+const dateLabel = date
+	? date.toLocaleDateString('es-CL', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+		})
+	: null;
+---
+
+<Layout hero={{ title: heroTitle }}>
+	<section class="section article-section">
+		<div class="container article-container" style="max-width: 960px;">
+			<h1 style="margin: 0 0 18px; font-size: 28px; line-height: 1.25; font-weight: 700; color: var(--primary);" set:html={title} />
+
+			{(author || dateLabel) && (
+				<p style="margin: 0 0 18px; color: var(--muted); font-size: 14px;">
+					{author ? author : ''}{author && dateLabel ? ' · ' : ''}{dateLabel ? dateLabel : ''}
+				</p>
+			)}
+
+			{featuredImage ? (
+				<img
+					src={featuredImage}
+					alt={post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? ''}
+					loading="lazy"
+					style="width: 100%; height: auto; border-radius: 16px; margin-bottom: 22px; box-shadow: var(--shadow);"
+				/>
+			) : null}
+
+			<div
+				class="prose prose-lg max-w-none prose-headings:text-primary prose-headings:font-semibold prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-3 prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-3 prose-p:text-lg prose-p:leading-relaxed prose-p:text-[color:var(--muted)] prose-strong:text-primary prose-a:text-accent hover:prose-a:text-primary prose-blockquote:border-accent prose-blockquote:text-primary/80 prose-ul:list-disc prose-ol:list-decimal prose-ul:pl-6 prose-ol:pl-6 prose-li:my-1 prose-li:text-[color:var(--muted)]"
+				set:html={content}
+			/>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.article-section {
+		padding-top: 54px;
+		background:
+			radial-gradient(900px 520px at 10% 0%, rgba(34, 211, 238, 0.18), transparent 55%),
+			radial-gradient(860px 540px at 100% 12%, rgba(42, 55, 85, 0.14), transparent 60%),
+			linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(247, 249, 252, 0.7));
+	}
+
+	.article-container {
+		background: rgba(255, 255, 255, 0.75);
+		border: 1px solid rgba(15, 23, 42, 0.10);
+		border-radius: 22px;
+		box-shadow: 0 18px 60px rgba(2, 6, 23, 0.10);
+		backdrop-filter: blur(12px);
+		padding: 48px 58px;
+	}
+
+	.article-container :global(h2) {
+		font-size: 22px;
+		margin: 32px 0 14px;
+		line-height: 1.3;
+		color: var(--primary);
+	}
+
+	.article-container :global(h3) {
+		font-size: 18px;
+		margin: 24px 0 12px;
+		line-height: 1.35;
+		color: var(--primary);
+	}
+
+	.article-container :global(p) {
+		font-size: 16px;
+		line-height: 1.75;
+		margin: 0 0 16px;
+		color: var(--muted);
+	}
+
+	.article-container :global(ul),
+	.article-container :global(ol) {
+		font-size: 16px;
+		line-height: 1.75;
+		color: var(--muted);
+		margin: 0 0 16px;
+		padding-left: 24px;
+	}
+
+	.article-container :global(li) {
+		margin-bottom: 8px;
+	}
+
+	@media (max-width: 720px) {
+		.article-container {
+			padding: 22px 16px;
+		}
+
+		.article-container :global(h2) {
+			font-size: 20px;
+		}
+
+		.article-container :global(h3) {
+			font-size: 17px;
+		}
+	}
+</style>

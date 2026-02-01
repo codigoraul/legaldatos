@@ -1,0 +1,161 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
+
+type Servicio = {
+	id: number;
+	slug: string;
+	link?: string;
+	title: { rendered: string };
+	content: { rendered: string };
+	acf?: { subtitulo?: string };
+	_embedded?: {
+		['wp:featuredmedia']?: Array<{ source_url?: string; alt_text?: string }>
+	};
+};
+
+const stripHtml = (html: string) => html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+const truncate = (text: string, max = 180) => (text.length <= max ? text : `${text.slice(0, max).trim()}…`);
+
+let servicios: Servicio[] = [];
+let loadError: string | null = null;
+
+try {
+	const perPage = 100;
+	let page = 1;
+	let totalPages = 1;
+
+	while (page <= totalPages) {
+		const res = await fetch(
+			`${WP_BASE}/wp-json/wp/v2/servicio?_embed&per_page=${perPage}&page=${page}`,
+			{
+				headers: { Accept: 'application/json' },
+			}
+		);
+		if (!res.ok) {
+			throw new Error(`WP ${res.status}`);
+		}
+		const headerTotalPages = Number(res.headers.get('x-wp-totalpages') ?? '1');
+		totalPages = Number.isFinite(headerTotalPages) && headerTotalPages > 0 ? headerTotalPages : 1;
+
+		const batch = (await res.json()) as Servicio[];
+		servicios = servicios.concat(batch);
+		page += 1;
+	}
+} catch (e) {
+	loadError = e instanceof Error ? e.message : 'Error desconocido';
+}
+
+const hero = {
+	title: 'Nuestros Servicios',
+	backgroundImage: '/bg-title.jpg',
+};
+---
+
+<Layout hero={hero}>
+	<section class="section">
+		<div class="container">
+			<h1 class="page-title">Nuestros Servicios</h1>
+
+			{loadError ? (
+				<p class="error">
+					No se pudo cargar desde WordPress ({WP_BASE}). Error: {loadError}
+				</p>
+			) : (
+				<div class="grid">
+					{servicios.map((s) => {
+						const img = s._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+						const alt = s._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? s.title?.rendered;
+						const subtitle = s.acf?.subtitulo;
+						const excerpt = truncate(stripHtml(s.content?.rendered ?? ''), 200);
+						return (
+							<article class="card item">
+								{img ? <img class="thumb" src={img} alt={alt} loading="lazy" /> : null}
+								<div class="body">
+									<h2 class="title" set:html={s.title?.rendered} />
+									{subtitle ? <p class="subtitle">{subtitle}</p> : null}
+									<p class="desc">{excerpt}</p>
+								</div>
+							</article>
+						);
+					})}
+				</div>
+			)}
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.error {
+		margin: 0;
+		color: rgba(185, 28, 28, 0.9);
+		background: rgba(185, 28, 28, 0.06);
+		border: 1px solid rgba(185, 28, 28, 0.18);
+		padding: 12px 14px;
+		border-radius: 12px;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 16px;
+	}
+
+	.item {
+		overflow: hidden;
+	}
+
+	.thumb {
+		width: 100%;
+		height: 200px;
+		object-fit: cover;
+		display: block;
+		border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+	}
+
+	.body {
+		padding: 16px;
+	}
+
+	.title {
+		margin: 0;
+		font-size: 24px;
+		line-height: 1.18;
+		letter-spacing: -0.01em;
+		font-weight: 650;
+	}
+
+	.subtitle {
+		margin: 8px 0 0;
+		color: #0055b2;
+		font-weight: 700;
+		font-size: 16px;
+		letter-spacing: 0.02em;
+	}
+
+	.desc {
+		margin: 10px 0 0;
+		color: var(--muted);
+		font-size: 15px;
+		line-height: 1.7;
+	}
+
+	@media (max-width: 900px) {
+		.grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 720px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+		.thumb {
+			height: 180px;
+		}
+		.title {
+			font-size: 17px;
+		}
+	}
+</style>

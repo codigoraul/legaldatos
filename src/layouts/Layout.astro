@@ -1,0 +1,226 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import '../styles/global.css';
+
+type LayoutHero = {
+	title: string;
+	backgroundImage?: string;
+	backgroundColor?: string;
+};
+
+const { hero, showHero = true } = Astro.props as { hero?: LayoutHero; showHero?: boolean };
+
+const pathname = Astro.url.pathname;
+
+const defaultHeroByPath: Record<string, LayoutHero> = {
+	'/servicios': {
+		title: 'Servicios',
+	},
+	'/articulos': {
+		title: 'Artículos',
+	},
+	'/contacto': {
+		title: 'Canales de Contacto',
+	},
+	'/nosotros': {
+		title: 'Nosotros',
+	},
+	'/pol%C3%ADtica-de-privacidad': {
+		title: 'Política de Privacidad',
+	},
+};
+
+const inferredHero: LayoutHero | undefined =
+	pathname.startsWith('/articulos/') && pathname !== '/articulos'
+		? { title: 'Artículo' }
+		: defaultHeroByPath[pathname];
+
+const resolvedHero: LayoutHero | undefined = hero ?? inferredHero;
+
+const shouldRenderHero =
+	showHero && !!resolvedHero && pathname !== '/' && pathname !== '/inicio' && pathname !== '/index';
+
+const breadcrumbs = resolvedHero
+	? [
+			{ label: 'Inicio', href: '/inicio' },
+			{ label: resolvedHero.title },
+		]
+	: [];
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+			rel="stylesheet"
+		/>
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..700&display=swap" rel="stylesheet">
+		<meta name="generator" content={Astro.generator} />
+		<title>LegalDatos</title>
+	</head>
+	<body>
+		<Header />
+		{shouldRenderHero ? (
+			<>
+				<h1 class="sr-only">{resolvedHero.title}</h1>
+				<PageHero
+					title={resolvedHero.title}
+					breadcrumbs={breadcrumbs}
+					backgroundImage={resolvedHero.backgroundImage ?? '/images/bg-title.jpg'}
+					backgroundPosition="60% 39%"
+				/>
+			</>
+		) : null}
+		<main class="page">
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	:global(:root) {
+		--primary: #2a3755;
+		--accent: #22d3ee;
+		--text: #0f172a;
+		--muted: rgba(15, 23, 42, 0.72);
+		--border: rgba(15, 23, 42, 0.12);
+		--surface: #f7f9fc;
+		--card: rgba(255, 255, 255, 0.85);
+		--shadow: 0 20px 60px rgba(2, 6, 23, 0.12);
+		--container: 1400px;
+	}
+
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+		font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+			sans-serif;
+		color: var(--text);
+		background: radial-gradient(1200px 800px at 15% -10%, rgba(34, 211, 238, 0.18), transparent 55%),
+			radial-gradient(900px 700px at 90% 10%, rgba(42, 55, 85, 0.16), transparent 55%),
+			#ffffff;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		text-rendering: geometricPrecision;
+	}
+
+	:global(.sr-only) {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border-width: 0;
+	}
+
+	:global(h1),
+	:global(h2),
+	:global(h3) {
+		font-family: 'Open Sans', sans-serif;
+		font-weight: 700;
+		letter-spacing: -0.01em;
+		line-height: 1.15;
+	}
+
+	:global(.page-title) {
+		font-family: 'Open Sans', sans-serif;
+		font-size: 38px;
+		font-weight: 700;
+		color: var(--primary);
+		text-align: center;
+		letter-spacing: -0.02em;
+		margin: 0 0 40px;
+	}
+
+	:global(p) {
+		font-size: 18px;
+		line-height: 1.85;
+		letter-spacing: -0.004em;
+	}
+
+	.page {
+		min-height: 60vh;
+	}
+
+	:global(.container) {
+		max-width: var(--container);
+		margin: 0 auto;
+		padding: 0 20px;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	:global(.section) {
+		padding: 72px 0;
+	}
+
+	:global(.card) {
+		background: var(--card);
+		border: 1px solid rgba(255, 255, 255, 0.6);
+		box-shadow: 0 12px 40px rgba(2, 6, 23, 0.08);
+		border-radius: 18px;
+		backdrop-filter: blur(12px);
+	}
+
+	:global(.btn) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+		padding: 12px 16px;
+		border-radius: 12px;
+		text-decoration: none;
+		font-weight: 700;
+		font-size: 14px;
+		letter-spacing: -0.01em;
+		border: 1px solid transparent;
+		transition:
+			transform 160ms ease,
+			box-shadow 160ms ease,
+			background 160ms ease,
+			color 160ms ease,
+			border-color 160ms ease;
+	}
+
+	:global(.btn:hover) {
+		transform: translateY(-1px);
+	}
+
+	:global(.btn-primary) {
+		background: linear-gradient(135deg, var(--primary), #1d2a46);
+		color: white;
+		box-shadow: 0 12px 30px rgba(42, 55, 85, 0.25);
+	}
+
+	:global(.btn-primary:hover) {
+		box-shadow: 0 16px 40px rgba(42, 55, 85, 0.32);
+	}
+
+	:global(.btn-secondary) {
+		background: rgba(255, 255, 255, 0.65);
+		color: var(--text);
+		border-color: rgba(15, 23, 42, 0.12);
+	}
+
+	:global(.btn-secondary:hover) {
+		border-color: rgba(34, 211, 238, 0.45);
+		box-shadow: 0 14px 40px rgba(2, 6, 23, 0.12);
+	}
+</style>

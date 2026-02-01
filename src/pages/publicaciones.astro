@@ -1,0 +1,305 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
+
+type Category = {
+	id: number;
+	name: string;
+	slug: string;
+};
+
+type Post = {
+	id: number;
+	slug: string;
+	title: { rendered: string };
+	date?: string;
+	categories?: number[];
+	_embedded?: {
+		['wp:featuredmedia']?: Array<{ source_url?: string; alt_text?: string }>;
+		['wp:term']?: Array<Array<{ id: number; name: string; slug: string }>>;
+	};
+};
+
+let allPosts: Post[] = [];
+let categories: Category[] = [];
+let loadError: string | null = null;
+
+try {
+	const [postsRes, catsRes] = await Promise.all([
+		fetch(`${WP_BASE}/wp-json/wp/v2/posts?_embed&per_page=100`, {
+			headers: { Accept: 'application/json' },
+		}),
+		fetch(`${WP_BASE}/wp-json/wp/v2/categories?per_page=100`, {
+			headers: { Accept: 'application/json' },
+		}),
+	]);
+
+	if (!postsRes.ok) throw new Error(`WP posts ${postsRes.status}`);
+	if (!catsRes.ok) throw new Error(`WP categories ${catsRes.status}`);
+
+	allPosts = (await postsRes.json()) as Post[];
+	categories = (await catsRes.json()) as Category[];
+} catch (e) {
+	loadError = e instanceof Error ? e.message : 'Error desconocido';
+}
+
+const findCategoryId = (name: string) => {
+	const lower = name.toLowerCase();
+	return categories.find(
+		(c) => c.name.toLowerCase() === lower || c.slug.toLowerCase() === lower.replace(/\s+/g, '-')
+	)?.id;
+};
+
+const datosPersonalesCatId = findCategoryId('Datos personales');
+const derechoLaboralCatId = findCategoryId('Derecho Laboral');
+const temasGeneralesCatId = findCategoryId('Temas generales');
+const complianceCatId = findCategoryId('Compliance de datos');
+
+const filterByCategories = (posts: Post[], catIds: (number | undefined)[]) => {
+	const validIds = catIds.filter((id): id is number => id !== undefined);
+	if (validIds.length === 0) return [];
+	return posts.filter((p) => p.categories?.some((c) => validIds.includes(c)));
+};
+
+const filterByCategory = (posts: Post[], catId: number | undefined) => {
+	if (!catId) return [];
+	return posts.filter((p) => p.categories?.includes(catId));
+};
+
+const postsDatosLaborales = filterByCategories(allPosts, [datosPersonalesCatId, derechoLaboralCatId]);
+const postsTemasGenerales = filterByCategory(allPosts, temasGeneralesCatId);
+const postsCompliance = filterByCategory(allPosts, complianceCatId);
+
+const allUsedCatIds = [datosPersonalesCatId, derechoLaboralCatId, temasGeneralesCatId, complianceCatId].filter((id): id is number => id !== undefined);
+
+const uncategorized = allPosts.filter((p) => {
+	const cats = p.categories ?? [];
+	return !cats.some((c) => allUsedCatIds.includes(c));
+});
+
+const formatDate = (dateStr?: string) => {
+	if (!dateStr) return '';
+	const date = new Date(dateStr);
+	return date.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
+};
+
+const hero = {
+	title: 'Publicaciones',
+	backgroundImage: '/bg-title.jpg',
+};
+
+const sections = [
+	{ title: 'Ley 21.719: Datos Personales y Derecho Laboral', posts: postsDatosLaborales, bg: 'light' },
+	{ title: 'Ley 21.719: Temas Generales', posts: postsTemasGenerales, bg: 'dark' },
+	{ title: 'Ley 21.719: Compliance de Datos', posts: postsCompliance, bg: 'light' },
+];
+---
+
+<Layout hero={hero}>
+	{loadError ? (
+		<section class="section">
+			<div class="container">
+				<p style="margin: 0; color: rgba(185, 28, 28, 0.9);">No se pudo cargar desde WordPress ({WP_BASE}). Error: {loadError}</p>
+			</div>
+		</section>
+	) : (
+		<>
+			{sections.map((section) => (
+				<section class={`pub-section ${section.bg === 'dark' ? 'dark-bg' : 'light-bg'}`}>
+					<div class="container">
+						<h2 class="section-title">{section.title}</h2>
+						{section.posts.length === 0 ? (
+							<p class="empty">No hay publicaciones en esta categoría.</p>
+						) : (
+							<div class="grid">
+								{section.posts.map((post) => {
+									const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+									const alt = post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? post.title?.rendered;
+									const url = `/articulos/${post.slug}`;
+									const dateLabel = formatDate(post.date);
+									return (
+										<article class="pub-card">
+											{dateLabel && <span class="date">{dateLabel}</span>}
+											<a href={url} class="card-link">
+												{image ? (
+													<img src={image} alt={alt} loading="lazy" class="thumb" />
+												) : (
+													<div class="thumb-placeholder"></div>
+												)}
+												<h3 class="card-title" set:html={post.title?.rendered} />
+											</a>
+										</article>
+									);
+								})}
+							</div>
+						)}
+					</div>
+				</section>
+			))}
+
+			{uncategorized.length > 0 && (
+				<section class="pub-section light-bg">
+					<div class="container">
+						<h2 class="section-title">Otras Publicaciones</h2>
+						<div class="grid">
+							{uncategorized.map((post) => {
+								const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+								const alt = post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? post.title?.rendered;
+								const url = `/articulos/${post.slug}`;
+								const dateLabel = formatDate(post.date);
+								return (
+									<article class="pub-card">
+										{dateLabel && <span class="date">{dateLabel}</span>}
+										<a href={url} class="card-link">
+											{image ? (
+												<img src={image} alt={alt} loading="lazy" class="thumb" />
+											) : (
+												<div class="thumb-placeholder"></div>
+											)}
+											<h3 class="card-title" set:html={post.title?.rendered} />
+										</a>
+									</article>
+								);
+							})}
+						</div>
+					</div>
+				</section>
+			)}
+		</>
+	)}
+</Layout>
+
+<style>
+	.pub-section {
+		padding: 48px 0;
+	}
+
+	.dark-bg {
+		background: #0C1630;
+	}
+
+	.light-bg {
+		background: #fff;
+	}
+
+	.section-title {
+		text-align: center;
+		font-size: 32px;
+		font-weight: 700;
+		margin: 0 0 36px;
+		letter-spacing: -0.02em;
+	}
+
+	.dark-bg .section-title {
+		color: rgba(255, 255, 255, 0.95);
+	}
+
+	.light-bg .section-title {
+		color: var(--primary);
+	}
+
+	.empty {
+		text-align: center;
+		color: rgba(255, 255, 255, 0.6);
+		font-size: 16px;
+	}
+
+	.light-bg .empty {
+		color: var(--muted);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(6, minmax(0, 1fr));
+		gap: 20px;
+	}
+
+	.pub-card {
+		text-align: center;
+	}
+
+	.date {
+		display: block;
+		font-size: 12px;
+		font-weight: 600;
+		margin-bottom: 8px;
+		text-transform: capitalize;
+	}
+
+	.dark-bg .date {
+		color: rgba(255, 255, 255, 0.5);
+	}
+
+	.light-bg .date {
+		color: var(--muted);
+	}
+
+	.card-link {
+		display: block;
+		text-decoration: none;
+		transition: transform 0.2s ease;
+	}
+
+	.card-link:hover {
+		transform: translateY(-4px);
+	}
+
+	.thumb {
+		width: 100%;
+		aspect-ratio: 1;
+		object-fit: cover;
+		border-radius: 12px;
+		display: block;
+		margin-bottom: 12px;
+	}
+
+	.thumb-placeholder {
+		width: 100%;
+		aspect-ratio: 1;
+		background: rgba(255, 255, 255, 0.1);
+		border-radius: 12px;
+		margin-bottom: 12px;
+	}
+
+	.card-title {
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 1.35;
+		margin: 0;
+	}
+
+	.dark-bg .card-title {
+		color: rgba(255, 255, 255, 0.9);
+	}
+
+	.light-bg .card-title {
+		color: var(--primary);
+	}
+
+	.card-link:hover .card-title {
+		text-decoration: underline;
+	}
+
+	@media (max-width: 1100px) {
+		.grid {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 768px) {
+		.grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.section-title {
+			font-size: 24px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
