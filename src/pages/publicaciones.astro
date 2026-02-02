@@ -86,7 +86,7 @@ const formatDate = (dateStr?: string) => {
 
 const hero = {
 	title: 'Publicaciones',
-	backgroundImage: '/bg-title.jpg',
+	backgroundImage: '/public/bg-images/bg-title-7.jpg',
 };
 
 const sections = [
@@ -99,7 +99,7 @@ const sections = [
 <Layout hero={hero}>
 	{loadError ? (
 		<section class="section">
-			<div class="container">
+			<div class="container ">
 				<p style="margin: 0; color: rgba(185, 28, 28, 0.9);">No se pudo cargar desde WordPress ({WP_BASE}). Error: {loadError}</p>
 			</div>
 		</section>
@@ -172,7 +172,7 @@ const sections = [
 
 <style>
 	.pub-section {
-		padding: 48px 0;
+		padding: 80px 0;
 	}
 
 	.dark-bg {

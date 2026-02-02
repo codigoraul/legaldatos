@@ -1,12 +1,28 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
+type YoastSEO = {
+	title?: string;
+	description?: string;
+	canonical?: string;
+	og_title?: string;
+	og_description?: string;
+	og_image?: Array<{ url?: string; width?: number; height?: number }>;
+	twitter_card?: string;
+	twitter_title?: string;
+	twitter_description?: string;
+	schema?: object;
+	focuskw?: string;
+};
+
 type Post = {
 	id: number;
 	slug: string;
 	title: { rendered: string };
 	content: { rendered: string };
 	date?: string;
+	yoast_head_json?: YoastSEO;
+	yoast_focus_keyword?: string;
 	_embedded?: {
 		author?: Array<{ name?: string }>;
 		['wp:featuredmedia']?: Array<{ source_url?: string; alt_text?: string }>;
@@ -72,9 +88,30 @@ const dateLabel = date
 			day: 'numeric',
 		})
 	: null;
+
+// Datos SEO de Yoast
+const yoast = post.yoast_head_json;
+const seoTitle = yoast?.title || heroTitle;
+const seoDescription = yoast?.description || '';
+const seoCanonical = yoast?.canonical;
+const ogTitle = yoast?.og_title || seoTitle;
+const ogDescription = yoast?.og_description || seoDescription;
+const ogImage = yoast?.og_image?.[0]?.url || featuredImage;
+const seoKeywords = post.yoast_focus_keyword || yoast?.focuskw || '';
 ---
 
-<Layout hero={{ title: heroTitle }}>
+<Layout 
+	hero={{ title: heroTitle }}
+	seo={{
+		title: seoTitle,
+		description: seoDescription,
+		canonical: seoCanonical,
+		ogTitle,
+		ogDescription,
+		ogImage,
+		keywords: seoKeywords,
+	}}
+>
 	<section class="section article-section">
 		<div class="container article-container" style="max-width: 960px;">
 			<h1 style="margin: 0 0 18px; font-size: 28px; line-height: 1.25; font-weight: 700; color: var(--primary);" set:html={title} />

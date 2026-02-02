@@ -1,8 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const hero = {
+	title: 'Nosotros',
+	backgroundImage: '/public/bg-images/bg-title-4.jpg',
+};	
 ---
 
-<Layout showHero={false}>
+<Layout hero={hero}>
 	<section class="hero">
 		<div class="container hero-inner">
 			<h1>
@@ -13,18 +18,14 @@ import Layout from '../layouts/Layout.astro';
 
 			<div class="hero-card">
 				<p class="hero-lead">
-					<strong>LegalDatos</strong> es una división del estudio jurídico
-					<span class="accent"> Manríquez Rivera</span>.
+					<strong>LegalDatos</strong> es una división del estudio jurídico <span class="accent">Manríquez Rivera</span>.
 				</p>
 				<div class="divider" aria-hidden="true"></div>
 				<p>
-					Nuestra consultora ofrece asesorías con todo tipo de organizaciones en la adopción de mejores prácticas
-					para la protección de datos, integrando la actual normativa de datos personales y compliance de datos en
-					el núcleo de su gobernanza.
+					Nuestra consultora ofrece asesorías a todo tipo de organizaciones en la adopción de mejores prácticas para la protección de datos, integrando la actual normativa de datos personales y compliance de datos en el núcleo de su gobernanza.
 				</p>
-				<p>
-					Estructuramos planes que cumplen con la ley actual y brindamos soporte constante a tus equipos,
-					asegurando que la vigilancia y ejecución de estas medidas perduren en el tiempo.
+				<p class="hero-italic">
+					Estructuramos planes que cumplen con la ley actual y brindamos soporte constante a tus equipos, asegurando que la vigilancia y ejecución de estas medidas perduren en el tiempo.
 				</p>
 			</div>
 		</div>
@@ -103,10 +104,11 @@ import Layout from '../layouts/Layout.astro';
 
 	h1 {
 		margin: 0;
-		font-size: 64px;
-		line-height: 1.05;
+		font-family: 'Montserrat', sans-serif;
+		font-size: clamp(42px, 6vw, 72px);
+		line-height: 1.1;
 		letter-spacing: -0.02em;
-		font-weight: 800;
+		font-weight: 700;
 	}
 
 	.accent {
@@ -114,35 +116,44 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.hero-card {
-		margin: 24px auto 0;
-		max-width: 620px;
-		padding: 22px 22px;
-		border-radius: 16px;
-		background: rgba(6, 16, 32, 0.35);
-		border: 1px solid rgba(255, 255, 255, 0.14);
-		backdrop-filter: blur(10px);
+		margin: 40px auto 0;
+		max-width: 720px;
+		padding: 32px 40px;
+		border-radius: 20px;
+		background: rgba(6, 16, 32, 0.5);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		backdrop-filter: blur(12px);
 	}
 
 	.hero-lead {
 		margin: 0;
-		font-size: 14px;
-		line-height: 1.7;
-		color: rgba(255, 255, 255, 0.86);
+		font-size: 17px;
+		line-height: 1.6;
+		color: rgba(255, 255, 255, 0.92);
+	}
+
+	.hero-lead strong {
+		color: #fff;
 	}
 
 	.hero-card p {
-		margin: 14px 0 0;
-		font-size: 13px;
+		margin: 20px 0 0;
+		font-size: 15px;
 		line-height: 1.8;
-		color: rgba(255, 255, 255, 0.72);
+		color: rgba(255, 255, 255, 0.75);
+	}
+
+	.hero-italic {
+		font-style: italic;
+		color: rgba(255, 255, 255, 0.7);
 	}
 
 	.divider {
-		width: 44px;
-		height: 3px;
+		width: 60px;
+		height: 2px;
 		border-radius: 999px;
-		background: rgba(34, 211, 238, 0.7);
-		margin: 12px auto 0;
+		background: linear-gradient(90deg, rgba(34, 211, 238, 0.8), rgba(124, 58, 237, 0.6));
+		margin: 20px auto;
 	}
 
 	.wave {

@@ -10,7 +10,17 @@ type LayoutHero = {
 	backgroundColor?: string;
 };
 
-const { hero, showHero = true } = Astro.props as { hero?: LayoutHero; showHero?: boolean };
+type SEOProps = {
+	title?: string;
+	description?: string;
+	canonical?: string;
+	ogTitle?: string;
+	ogDescription?: string;
+	ogImage?: string;
+	keywords?: string;
+};
+
+const { hero, showHero = true, seo } = Astro.props as { hero?: LayoutHero; showHero?: boolean; seo?: SEOProps };
 
 const pathname = Astro.url.pathname;
 
@@ -67,7 +77,25 @@ const breadcrumbs = resolvedHero
 
 		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..700&display=swap" rel="stylesheet">
 		<meta name="generator" content={Astro.generator} />
-		<title>LegalDatos</title>
+		
+		<!-- SEO Meta Tags -->
+		<title>{seo?.title || 'LegalDatos'}</title>
+		{seo?.description && <meta name="description" content={seo.description} />}
+		{seo?.keywords && <meta name="keywords" content={seo.keywords} />}
+		{seo?.canonical && <link rel="canonical" href={seo.canonical} />}
+		
+		<!-- Open Graph -->
+		{seo?.ogTitle && <meta property="og:title" content={seo.ogTitle} />}
+		{seo?.ogDescription && <meta property="og:description" content={seo.ogDescription} />}
+		{seo?.ogImage && <meta property="og:image" content={seo.ogImage} />}
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="es_CL" />
+		
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		{seo?.ogTitle && <meta name="twitter:title" content={seo.ogTitle} />}
+		{seo?.ogDescription && <meta name="twitter:description" content={seo.ogDescription} />}
+		{seo?.ogImage && <meta name="twitter:image" content={seo.ogImage} />}
 	</head>
 	<body>
 		<Header />
@@ -77,7 +105,7 @@ const breadcrumbs = resolvedHero
 				<PageHero
 					title={resolvedHero.title}
 					breadcrumbs={breadcrumbs}
-					backgroundImage={resolvedHero.backgroundImage ?? '/images/bg-title.jpg'}
+					backgroundImage={resolvedHero.backgroundImage ?? '/bg-images/bg-title.jpg'}
 					backgroundPosition="60% 39%"
 				/>
 			</>
