@@ -32,30 +32,40 @@ type Post = {
 export async function getStaticPaths() {
 	const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
 
-	let posts: Post[] = [];
-	const perPage = 100;
-	let page = 1;
-	let totalPages = 1;
-
-	while (page <= totalPages) {
-		const res = await fetch(`${WP_BASE}/wp-json/wp/v2/posts?_embed&per_page=${perPage}&page=${page}`, {
-			headers: { Accept: 'application/json' },
-		});
-		if (!res.ok) {
-			throw new Error(`WP ${res.status}`);
-		}
-		const headerTotalPages = Number(res.headers.get('x-wp-totalpages') ?? '1');
-		totalPages = Number.isFinite(headerTotalPages) && headerTotalPages > 0 ? headerTotalPages : 1;
-
-		const batch = (await res.json()) as Post[];
-		posts = posts.concat(batch);
-		page += 1;
+	// Si no estamos en producción o no hay WP_URL, retornar rutas vacías
+	if (!WP_BASE || WP_BASE === 'http://localhost:10189') {
+		return [];
 	}
 
-	return posts.map((post) => ({
-		params: { slug: post.slug },
-		props: { post },
-	}));
+	try {
+		let posts: Post[] = [];
+		const perPage = 100;
+		let page = 1;
+		let totalPages = 1;
+
+		while (page <= totalPages) {
+			const res = await fetch(`${WP_BASE}/wp-json/wp/v2/posts?_embed&per_page=${perPage}&page=${page}`, {
+				headers: { Accept: 'application/json' },
+			});
+			if (!res.ok) {
+				throw new Error(`WP ${res.status}`);
+			}
+			const headerTotalPages = Number(res.headers.get('x-wp-totalpages') ?? '1');
+			totalPages = Number.isFinite(headerTotalPages) && headerTotalPages > 0 ? headerTotalPages : 1;
+
+			const batch = (await res.json()) as Post[];
+			posts = posts.concat(batch);
+			page += 1;
+		}
+
+		return posts.map((post) => ({
+			params: { slug: post.slug },
+			props: { post },
+		}));
+	} catch (error) {
+		console.warn('No se pudo conectar a WordPress, generando rutas vacías:', error);
+		return [];
+	}
 }
 
 const { post } = Astro.props as { post: Post };
