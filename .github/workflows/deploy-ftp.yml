@@ -35,7 +35,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: /home/legaldat/public_html/prueba/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
           protocol: ftps
           port: 21
           dangerous-clean-slate: false
