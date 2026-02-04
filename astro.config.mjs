@@ -9,5 +9,7 @@ export default defineConfig({
 		plugins: [tailwindcss()],
 	},
 	trailingSlash: 'always',
-	base: '/prueba',
+	build: {
+		assetsPrefix: './'
+	}
 });
