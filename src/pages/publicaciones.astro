@@ -118,7 +118,7 @@ const sections = [
 								{section.posts.map((post) => {
 									const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
 									const alt = post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? post.title?.rendered;
-									const url = `${basePath}/articulos/${post.slug}`;
+									const url = `${basePath}/articulos/${post.slug}/`;
 									const dateLabel = formatDate(post.date);
 									return (
 										<article class="pub-card">
@@ -148,7 +148,7 @@ const sections = [
 							{uncategorized.map((post) => {
 								const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
 								const alt = post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? post.title?.rendered;
-								const url = `${basePath}/articulos/${post.slug}`;
+								const url = `${basePath}/articulos/${post.slug}/`;
 								const dateLabel = formatDate(post.date);
 								return (
 									<article class="pub-card">

@@ -71,7 +71,7 @@ const hero = {
 						const alt = s._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? s.title?.rendered;
 						const subtitle = s.acf?.subtitulo;
 						const excerpt = truncate(stripHtml(s.content?.rendered ?? ''), 200);
-						const serviceUrl = `${basePath}/servicios/${s.slug}`;
+						const serviceUrl = `${basePath}/servicios/${s.slug}/`;
 						return (
 							<article class="card item">
 								<a href={serviceUrl} class="service-link">
