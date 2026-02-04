@@ -32,8 +32,8 @@ type Post = {
 export async function getStaticPaths() {
 	const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
 
-	// Si no estamos en producción o no hay WP_URL, retornar rutas vacías
-	if (!WP_BASE || WP_BASE === 'http://localhost:10189') {
+	// Si no hay WP_URL, retornar rutas vacías
+	if (!WP_BASE) {
 		return [];
 	}
 

@@ -1,0 +1,210 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+type Servicio = {
+	id: number;
+	slug: string;
+	link?: string;
+	title: { rendered: string };
+	content: { rendered: string };
+	acf?: { subtitulo?: string };
+	_embedded?: {
+		['wp:featuredmedia']?: Array<{ source_url?: string; alt_text?: string }>
+	};
+};
+
+const isDev = import.meta.env.DEV;
+const basePath = isDev ? '' : '/prueba';
+
+export async function getStaticPaths() {
+	const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
+	
+	// Si no hay WP_URL, retornar rutas vacías
+	if (!WP_BASE) {
+		return [];
+	}
+
+	try {
+		let servicios: Servicio[] = [];
+		const perPage = 100;
+		let page = 1;
+		let totalPages = 1;
+
+		while (page <= totalPages) {
+			const res = await fetch(`${WP_BASE}/wp-json/wp/v2/servicio?_embed&per_page=${perPage}&page=${page}`, {
+				headers: { Accept: 'application/json' },
+			});
+			if (!res.ok) {
+				throw new Error(`WP ${res.status}`);
+			}
+			const headerTotalPages = Number(res.headers.get('x-wp-totalpages') ?? '1');
+			totalPages = Number.isFinite(headerTotalPages) && headerTotalPages > 0 ? headerTotalPages : 1;
+
+			const batch = (await res.json()) as Servicio[];
+			servicios = servicios.concat(batch);
+			page += 1;
+		}
+
+		return servicios.map((servicio) => ({
+			params: { slug: servicio.slug },
+			props: { servicio },
+		}));
+	} catch (error) {
+		console.error('Error fetching servicios:', error);
+		return [];
+	}
+}
+
+const { servicio } = Astro.props;
+
+const hero = {
+	title: servicio.title?.rendered || 'Servicio',
+	backgroundImage: '/prueba/bg-images/bg-title-3.jpg',
+};
+---
+
+<Layout hero={hero}>
+	<section class="section">
+		<div class="container">
+			<div class="service-detail">
+				{servicio._embedded?.['wp:featuredmedia']?.[0]?.source_url && (
+					<img 
+						class="service-image"
+						src={servicio._embedded['wp:featuredmedia'][0].source_url}
+						alt={servicio._embedded['wp:featuredmedia'][0].alt_text || servicio.title?.rendered}
+						loading="lazy"
+					/>
+				)}
+				
+				<div class="service-content">
+					<h1 class="service-title" set:html={servicio.title?.rendered} />
+					
+					{servicio.acf?.subtitulo && (
+						<p class="service-subtitle">{servicio.acf.subtitulo}</p>
+					)}
+					
+					<div class="service-body" set:html={servicio.content?.rendered} />
+				</div>
+			</div>
+			
+			<div class="back-link">
+				<a href={`${basePath}/servicios/`} class="btn btn-secondary">
+					← Volver a Servicios
+				</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.service-detail {
+		display: grid;
+		grid-template-columns: 1fr 2fr;
+		gap: 3rem;
+		margin-bottom: 3rem;
+	}
+
+	.service-image {
+		width: 100%;
+		height: auto;
+		border-radius: 12px;
+		box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+	}
+
+	.service-content {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.service-title {
+		font-size: 2.5rem;
+		font-weight: 700;
+		color: var(--foreground);
+		margin: 0;
+		line-height: 1.2;
+	}
+
+	.service-subtitle {
+		font-size: 1.25rem;
+		color: var(--muted-foreground);
+		margin: 0;
+		font-weight: 500;
+	}
+
+	.service-body {
+		font-size: 1.125rem;
+		line-height: 1.7;
+		color: var(--foreground);
+	}
+
+	.service-body h2 {
+		font-size: 1.875rem;
+		margin: 2rem 0 1rem 0;
+		color: var(--foreground);
+	}
+
+	.service-body h3 {
+		font-size: 1.5rem;
+		margin: 1.5rem 0 0.75rem 0;
+		color: var(--foreground);
+	}
+
+	.service-body p {
+		margin: 0 0 1rem 0;
+	}
+
+	.service-body ul, .service-body ol {
+		margin: 1rem 0;
+		padding-left: 2rem;
+	}
+
+	.service-body li {
+		margin: 0.5rem 0;
+	}
+
+	.back-link {
+		text-align: center;
+		margin-top: 3rem;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.75rem 1.5rem;
+		border-radius: 8px;
+		text-decoration: none;
+		font-weight: 500;
+		transition: all 0.2s;
+	}
+
+	.btn-secondary {
+		background-color: var(--muted);
+		color: var(--foreground);
+		border: 1px solid var(--border);
+	}
+
+	.btn-secondary:hover {
+		background-color: var(--accent);
+		color: white;
+	}
+
+	@media (max-width: 768px) {
+		.service-detail {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
+		.service-title {
+			font-size: 2rem;
+		}
+
+		.service-subtitle {
+			font-size: 1.125rem;
+		}
+
+		.service-body {
+			font-size: 1rem;
+		}
+	}
+</style>

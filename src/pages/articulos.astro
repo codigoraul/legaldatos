@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 
 const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
+const isDev = import.meta.env.DEV;
+const basePath = isDev ? '' : '/prueba';
 
 type Post = {
 	id: number;
@@ -50,7 +52,7 @@ try {
 }
 const hero = {
 	title: 'Artículos',
-	backgroundImage: '/bg-title2.jpg',
+	backgroundImage: '/prueba/bg-title2.jpg',
 };
 ---
 
@@ -69,7 +71,7 @@ const hero = {
 						const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
 						const alt = post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? post.title?.rendered;
 						const excerpt = getExcerpt(post);
-						const url = `/articulos/${post.slug}`;
+						const url = `${basePath}/articulos/${post.slug}`;
 						return (
 							<article class="card" style="overflow: hidden;">
 								<a href={url} style="display: block; text-decoration: none; color: inherit;">

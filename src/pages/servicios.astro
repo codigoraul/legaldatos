@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 
 const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
+const isDev = import.meta.env.DEV;
+const basePath = isDev ? '' : '/prueba';
 
 type Servicio = {
 	id: number;
@@ -69,14 +71,17 @@ const hero = {
 						const alt = s._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? s.title?.rendered;
 						const subtitle = s.acf?.subtitulo;
 						const excerpt = truncate(stripHtml(s.content?.rendered ?? ''), 200);
+						const serviceUrl = `${basePath}/servicios/${s.slug}`;
 						return (
 							<article class="card item">
-								{img ? <img class="thumb" src={img} alt={alt} loading="lazy" /> : null}
-								<div class="body">
-									<h2 class="title" set:html={s.title?.rendered} />
-									{subtitle ? <p class="subtitle">{subtitle}</p> : null}
-									<p class="desc">{excerpt}</p>
-								</div>
+								<a href={serviceUrl} class="service-link">
+									{img ? <img class="thumb" src={img} alt={alt} loading="lazy" /> : null}
+									<div class="body">
+										<h2 class="title" set:html={s.title?.rendered} />
+										{subtitle ? <p class="subtitle">{subtitle}</p> : null}
+										<p class="desc">{excerpt}</p>
+									</div>
+								</a>
 							</article>
 						);
 					})}
