@@ -2,6 +2,781 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout>
-	<meta http-equiv="refresh" content="0; url=/inicio" />
+<Layout showHero={false}>
+	<section class="hero">
+		<div class="container hero-inner">
+			<div class="hero-brand">
+				<span class="hero-brand-text">Legal</span><span class="hero-brand-accent">Datos</span>
+			</div>
+
+			<h2>
+				Protege el Futuro
+				<br />
+				de tu <span class="accent">Empresa</span>
+			</h2>
+
+			<p class="hero-copy">
+				Como <strong>estudio jurídico especializado</strong>, te preparamos para la nueva <strong>Ley 21.719</strong>.
+				Implementamos Compliance de Datos y Modelos de Prevención de Infracciones para transformar el riesgo de
+				multas en <span class="accent">seguridad estratégica</span>.
+			</p>
+
+			<div class="hero-actions">
+				<a class="hero-btn" href="/contacto">Solicitar un consultor</a>
+			</div>
+		</div>
+
+		<svg class="wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+			<path
+				d="M0,96L80,90.7C160,85,320,75,480,69.3C640,64,800,64,960,69.3C1120,75,1280,85,1360,90.7L1440,96L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"
+				fill="#ffffff"
+			/>
+		</svg>
+	</section>
+
+	<!-- Sección: Diciembre 2026 - El Cambio de Reglas -->
+	<section class="section-reglas">
+		<div class="container">
+			<span class="reglas-badge">DESDE DICIEMBRE DE 2026</span>
+			<h2 class="reglas-title">Diciembre 2026: El Cambio de Reglas</h2>
+			<p class="reglas-subtitle">
+				El nuevo sistema sancionatorio administrado por la <strong>Agencia de Protección de Datos Personales</strong> clasifica las infracciones y <span class="accent">eleva los montos drásticamente</span>.
+			</p>
+
+			<div class="reglas-grid">
+				<article class="reglas-card reglas-card--leve">
+					<div class="reglas-card-header">
+						<span class="reglas-icon reglas-icon--yellow">⚠</span>
+						<span class="reglas-nivel">NIVEL 1</span>
+					</div>
+					<h3 class="reglas-tipo">Leves</h3>
+					<div class="reglas-monto">5.000 UTM</div>
+					<div class="reglas-equiv">~$332.000.000</div>
+					<p class="reglas-desc">Falta de políticas claras o retraso en respuesta a titulares de datos.</p>
+				</article>
+
+				<article class="reglas-card reglas-card--grave">
+					<span class="reglas-tag">FALTA GRAVE</span>
+					<div class="reglas-card-header">
+						<span class="reglas-icon reglas-icon--orange">⊘</span>
+						<span class="reglas-nivel">NIVEL 2</span>
+					</div>
+					<h3 class="reglas-tipo">Graves</h3>
+					<div class="reglas-monto">10.000 UTM</div>
+					<div class="reglas-equiv">~$665.000.000</div>
+					<p class="reglas-desc">Tratamiento sin base legal, sin consentimiento o brechas de seguridad.</p>
+				</article>
+
+				<article class="reglas-card reglas-card--gravisima">
+					<div class="reglas-card-header">
+						<span class="reglas-icon reglas-icon--red">⊘</span>
+						<span class="reglas-nivel">NIVEL 3</span>
+					</div>
+					<h3 class="reglas-tipo">Gravísimas</h3>
+					<div class="reglas-monto">20.000 UTM</div>
+					<div class="reglas-equiv">~$1.330.000.000</div>
+					<p class="reglas-desc">Uso fraudulento, ocultar hackeos deliberadamente o datos sensibles.</p>
+				</article>
+			</div>
+
+			<div class="reglas-warning">
+				<span class="reglas-warning-icon">📈</span>
+				<div>
+					<strong>¿Grandes Empresas? Cuidado con la Reincidencia</strong>
+					<p>Si reincides en faltas graves, la multa deja de ser fija y pasa a ser proporcional: <span class="accent">hasta el 4% de tus ingresos anuales globales</span>.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Sección: Gestión de Riesgo Interno -->
+	<section class="section-riesgo">
+		<div class="container">
+			<span class="riesgo-badge">GESTIÓN DE RIESGO INTERNO</span>
+			<h2 class="riesgo-title">No solo son Clientes:<br/><span class="accent">Tus Nuevas Obligaciones con los Trabajadores</span></h2>
+			<p class="riesgo-subtitle">La Ley 21.719 exige blindar legalmente la relación laboral. El incumplimiento interno también genera sanciones.</p>
+
+			<div class="riesgo-grid">
+				<article class="riesgo-card">
+					<span class="riesgo-card-icon riesgo-card-icon--purple">📋</span>
+					<h3>Adecuación Contractual</h3>
+					<p>La ley exige incorporar el "Modelo de Prevención" en los <strong>contratos de trabajo</strong> y en el <strong>Reglamento Interno (RIOHS)</strong>. No hacerlo es una infracción sancionable.</p>
+				</article>
+
+				<article class="riesgo-card">
+					<span class="riesgo-card-icon riesgo-card-icon--yellow">👆</span>
+					<h3>Control Biométrico</h3>
+					<p>¿Usas huella o reconocimiento facial? Son <strong>datos sensibles</strong>. Requieres protocolos de seguridad elevados y bases de licitud específicas ante la Agencia.</p>
+				</article>
+
+				<article class="riesgo-card">
+					<span class="riesgo-card-icon riesgo-card-icon--blue">🔒</span>
+					<h3>Deber de Secreto</h3>
+					<p>Si un empleado filtra datos, la empresa responde. Es obligatorio <strong>capacitar al personal</strong> y establecer cláusulas de secreto que perduran tras el despido.</p>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<!-- Sección: Solución Compliance 360° -->
+	<section class="section-compliance">
+		<div class="container compliance-grid">
+			<div class="compliance-content">
+				<span class="compliance-badge">SOLUCIÓN COMPLIANCE 360°</span>
+				<h2 class="compliance-title">Tu Escudo Legal<br/><span class="accent">Ante la Agencia</span></h2>
+				<p class="compliance-desc">La ley ofrece una salida: el <strong>Modelo de Prevención de Infracciones</strong>. Al adoptarlo, conviertes tu gestión de datos en una circunstancia atenuante probada.</p>
+
+				<div class="compliance-features">
+					<div class="compliance-feature">
+						<span class="compliance-feature-icon">✓</span>
+						<div>
+							<strong>Certificación Oficial</strong>
+							<p>Te ayudamos en el proceso de inscripción en el Registro Nacional de Sanciones y Cumplimiento como empresa validada.</p>
+						</div>
+					</div>
+
+					<div class="compliance-feature">
+						<span class="compliance-feature-icon">🔒</span>
+						<div>
+							<strong>Blindaje de Activos</strong>
+							<p>Evita que una multa ponga en riesgo el flujo de caja o la reputación de tu marca.</p>
+						</div>
+					</div>
+				</div>
+
+				<a class="compliance-cta" href="/contacto">Hablar con un consultor experto →</a>
+			</div>
+
+			<div class="compliance-visual">
+				<img src="/images/compliance-dashboard.avif" alt="Dashboard de cumplimiento" loading="lazy" class="compliance-img" />
+				<div class="compliance-badge-active">
+					<span class="compliance-dot"></span>
+					<div>
+						<strong>SISTEMA ACTIVO</strong>
+						<p>Monitoreo de cumplimiento normativo en tiempo real.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 </Layout>
+
+<style>
+	.hero {
+		position: relative;
+		padding: 72px 0 0;
+		min-height: 640px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		color: rgba(255, 255, 255, 0.95);
+		background:
+			linear-gradient(180deg, rgba(6, 16, 32, 0.92), rgba(6, 16, 32, 0.78)),
+			radial-gradient(900px 520px at 70% 25%, rgba(34, 211, 238, 0.16), transparent 58%),
+			radial-gradient(760px 520px at 18% 36%, rgba(34, 211, 238, 0.10), transparent 62%),
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700' viewBox='0 0 1200 700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%2322D3EE' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='%23A855F7' stop-opacity='.25'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23g)' stroke-opacity='.35' stroke-width='2'%3E%3Cpath d='M120 520 L260 420 L420 500 L560 380 L720 440 L900 320 L1080 380'/%3E%3Cpath d='M160 240 L310 310 L480 240 L640 300 L820 220 L980 260'/%3E%3Cpath d='M220 610 L360 560 L520 620 L700 560 L860 610'/%3E%3C/g%3E%3Cg%3E%3Cg fill='%23ffffff' fill-opacity='.08'%3E%3Ccircle cx='120' cy='520' r='10'/%3E%3Ccircle cx='260' cy='420' r='7'/%3E%3Ccircle cx='420' cy='500' r='9'/%3E%3Ccircle cx='560' cy='380' r='8'/%3E%3Ccircle cx='720' cy='440' r='9'/%3E%3Ccircle cx='900' cy='320' r='10'/%3E%3Ccircle cx='1080' cy='380' r='8'/%3E%3Ccircle cx='160' cy='240' r='8'/%3E%3Ccircle cx='310' cy='310' r='10'/%3E%3Ccircle cx='480' cy='240' r='9'/%3E%3Ccircle cx='640' cy='300' r='8'/%3E%3Ccircle cx='820' cy='220' r='9'/%3E%3Ccircle cx='980' cy='260' r='8'/%3E%3C/g%3E%3Cg fill='%2322D3EE' fill-opacity='.10'%3E%3Ccircle cx='720' cy='440' r='18'/%3E%3Ccircle cx='310' cy='310' r='16'/%3E%3Ccircle cx='900' cy='320' r='16'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+		background-size: cover;
+		background-position: center;
+	}
+
+	.hero::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background:
+			radial-gradient(900px 520px at 65% 30%, rgba(34, 211, 238, 0.18), transparent 60%),
+			radial-gradient(800px 560px at 20% 40%, rgba(42, 55, 85, 0.2), transparent 60%);
+		pointer-events: none;
+	}
+
+	.hero-inner {
+		position: relative;
+		padding-bottom: 88px;
+		max-width: 920px;
+	}
+
+	.hero-brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		font-size: 30px;
+		margin-bottom: 18px;
+	}
+
+	.hero-brand-text {
+		color: rgba(255, 255, 255, 0.92);
+	}
+
+	.hero-brand-accent {
+		color: var(--accent);
+	}
+
+	.kicker {
+		margin: 0 0 10px;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--muted);
+		font-size: 12px;
+	}
+
+	h2 {
+		 font-family: 'Montserrat', sans-serif;
+		 font-weight: 700;
+		margin: 0;
+		font-size: clamp(40px, 5.6vw, 72px);
+		line-height: 1.06;
+		letter-spacing: -0.02em;
+		font-weight: 600;
+	}
+
+	.accent {
+		color: var(--accent);
+	}
+
+	.hero-copy {
+		margin: 18px auto 0;
+		max-width: 74ch;
+		color: rgba(255, 255, 255, 0.74);
+		font-size: 18px;
+		line-height: 1.75;
+		letter-spacing: -0.005em;
+	}
+
+	.hero-copy strong {
+		color: rgba(255, 255, 255, 0.9);
+		font-weight: 800;
+	}
+
+	.hero-actions {
+		margin-top: 26px;
+		display: flex;
+		justify-content: center;
+	}
+
+	.hero-btn {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 18px 36px;
+		border-radius: 999px;
+		text-decoration: none;
+		text-transform: uppercase;
+		letter-spacing: 0.14em;
+		font-weight: 800;
+		font-size: 13px;
+		color: #fff;
+		background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 50%, #22d3ee 100%);
+		background-size: 200% 200%;
+		animation: gradientShift 3s ease infinite;
+		box-shadow:
+			0 0 20px rgba(34, 211, 238, 0.4),
+			0 0 40px rgba(124, 58, 237, 0.3),
+			0 8px 32px rgba(0, 0, 0, 0.3);
+		border: 2px solid rgba(255, 255, 255, 0.25);
+		transition: all 0.3s ease;
+		overflow: hidden;
+	}
+
+	.hero-btn::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -100%;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+		transition: left 0.5s ease;
+	}
+
+	.hero-btn:hover::before {
+		left: 100%;
+	}
+
+	.hero-btn:hover {
+		transform: translateY(-3px) scale(1.02);
+		box-shadow:
+			0 0 30px rgba(34, 211, 238, 0.6),
+			0 0 60px rgba(124, 58, 237, 0.4),
+			0 12px 40px rgba(0, 0, 0, 0.4);
+		border-color: rgba(255, 255, 255, 0.4);
+	}
+
+	@keyframes gradientShift {
+		0% { background-position: 0% 50%; }
+		50% { background-position: 100% 50%; }
+		100% { background-position: 0% 50%; }
+	}
+
+	.wave {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: -1px;
+		width: 100%;
+		height: 120px;
+		display: block;
+	}
+
+	@media (max-width: 720px) {
+		h1 {
+			font-size: 40px;
+			line-height: 1.05;
+		}
+
+		.hero {
+			min-height: 560px;
+			padding-top: 54px;
+		}
+
+		.hero-brand {
+			font-size: 22px;
+		}
+	}
+
+	/* Sección Reglas */
+	.section-reglas {
+		padding: 80px 0;
+		background: linear-gradient(180deg, #fff 0%, #f0f4f8 100%);
+		text-align: center;
+	}
+
+	.reglas-badge {
+		display: inline-block;
+		background: var(--primary);
+		color: #fff;
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		padding: 8px 18px;
+		border-radius: 999px;
+		margin-bottom: 18px;
+	}
+
+	.reglas-title {
+		font-family: 'Montserrat', sans-serif;
+		font-size: clamp(32px, 5vw, 48px);
+		font-weight: 700;
+		color: var(--primary);
+		margin: 0 0 16px;
+		line-height: 1.1;
+	}
+
+	.reglas-subtitle {
+		max-width: 700px;
+		margin: 0 auto 48px;
+		font-size: 18px;
+		color: var(--muted);
+		line-height: 1.6;
+	}
+
+	.reglas-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 24px;
+		margin-bottom: 32px;
+	}
+
+	.reglas-card {
+		background: #fff;
+		border-radius: 16px;
+		padding: 32px 24px;
+		text-align: left;
+		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+		border: 2px solid transparent;
+		position: relative;
+	}
+
+	.reglas-card--leve {
+		border-color: rgba(234, 179, 8, 0.3);
+	}
+
+	.reglas-card--grave {
+		border-color: rgba(249, 115, 22, 0.4);
+		background: linear-gradient(180deg, rgba(249, 115, 22, 0.03) 0%, #fff 100%);
+	}
+
+	.reglas-card--gravisima {
+		border-color: rgba(239, 68, 68, 0.3);
+	}
+
+	.reglas-tag {
+		position: absolute;
+		top: -12px;
+		right: 20px;
+		background: #ef4444;
+		color: #fff;
+		font-size: 10px;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		padding: 6px 12px;
+		border-radius: 6px;
+	}
+
+	.reglas-card-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 16px;
+	}
+
+	.reglas-icon {
+		width: 40px;
+		height: 40px;
+		border-radius: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 18px;
+	}
+
+	.reglas-icon--yellow {
+		background: rgba(234, 179, 8, 0.15);
+	}
+
+	.reglas-icon--orange {
+		background: rgba(249, 115, 22, 0.15);
+	}
+
+	.reglas-icon--red {
+		background: rgba(239, 68, 68, 0.15);
+	}
+
+	.reglas-nivel {
+		font-size: 11px;
+		font-weight: 600;
+		color: var(--muted);
+		letter-spacing: 0.05em;
+	}
+
+	.reglas-tipo {
+		font-size: 18px;
+		font-weight: 700;
+		color: var(--primary);
+		margin: 0 0 8px;
+	}
+
+	.reglas-monto {
+		font-size: 32px;
+		font-weight: 800;
+		color: var(--primary);
+		margin-bottom: 4px;
+	}
+
+	.reglas-equiv {
+		font-size: 14px;
+		color: var(--muted);
+		margin-bottom: 16px;
+	}
+
+	.reglas-desc {
+		font-size: 14px;
+		color: var(--muted);
+		line-height: 1.5;
+		margin: 0;
+	}
+
+	.reglas-warning {
+		background: var(--primary);
+		color: #fff;
+		border-radius: 16px;
+		padding: 24px 32px;
+		display: flex;
+		align-items: center;
+		gap: 20px;
+		text-align: left;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.reglas-warning-icon {
+		font-size: 32px;
+		background: rgba(34, 211, 238, 0.2);
+		width: 56px;
+		height: 56px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	.reglas-warning strong {
+		font-size: 18px;
+		display: block;
+		margin-bottom: 4px;
+	}
+
+	.reglas-warning p {
+		margin: 0;
+		font-size: 15px;
+		opacity: 0.9;
+	}
+
+	/* Sección Riesgo Interno */
+	.section-riesgo {
+		padding: 80px 0;
+		background: #fff;
+		text-align: center;
+	}
+
+	.riesgo-badge {
+		display: inline-block;
+		color: #7c3aed;
+		font-size: 12px;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		margin-bottom: 12px;
+	}
+
+	.riesgo-title {
+		font-family: 'Montserrat', sans-serif;
+		font-size: clamp(28px, 4vw, 42px);
+		font-weight: 700;
+		color: var(--primary);
+		margin: 0 0 16px;
+		line-height: 1.2;
+	}
+
+	.riesgo-subtitle {
+		max-width: 650px;
+		margin: 0 auto 48px;
+		font-size: 17px;
+		color: var(--muted);
+		line-height: 1.6;
+	}
+
+	.riesgo-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 24px;
+	}
+
+	.riesgo-card {
+		background: #fff;
+		border-radius: 16px;
+		padding: 32px 24px;
+		text-align: left;
+		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+		border-top: 4px solid;
+	}
+
+	.riesgo-card:nth-child(1) {
+		border-top-color: #7c3aed;
+	}
+
+	.riesgo-card:nth-child(2) {
+		border-top-color: #eab308;
+	}
+
+	.riesgo-card:nth-child(3) {
+		border-top-color: #3b82f6;
+	}
+
+	.riesgo-card-icon {
+		width: 44px;
+		height: 44px;
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 20px;
+		margin-bottom: 16px;
+	}
+
+	.riesgo-card-icon--purple {
+		background: rgba(124, 58, 237, 0.12);
+	}
+
+	.riesgo-card-icon--yellow {
+		background: rgba(234, 179, 8, 0.12);
+	}
+
+	.riesgo-card-icon--blue {
+		background: rgba(59, 130, 246, 0.12);
+	}
+
+	.riesgo-card h3 {
+		font-size: 18px;
+		font-weight: 700;
+		color: var(--primary);
+		margin: 0 0 12px;
+	}
+
+	.riesgo-card p {
+		font-size: 15px;
+		color: var(--muted);
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	/* Sección Compliance */
+	.section-compliance {
+		padding: 80px 0;
+		background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
+	}
+
+	.compliance-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 60px;
+		align-items: center;
+	}
+
+	.compliance-badge {
+		display: inline-block;
+		color: #0891b2;
+		font-size: 12px;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		margin-bottom: 12px;
+	}
+
+	.compliance-title {
+		font-family: 'Montserrat', sans-serif;
+		font-size: clamp(28px, 4vw, 40px);
+		font-weight: 700;
+		color: var(--primary);
+		margin: 0 0 20px;
+		line-height: 1.2;
+	}
+
+	.compliance-desc {
+		font-size: 17px;
+		color: var(--muted);
+		line-height: 1.7;
+		margin: 0 0 32px;
+	}
+
+	.compliance-features {
+		display: grid;
+		gap: 20px;
+		margin-bottom: 32px;
+	}
+
+	.compliance-feature {
+		display: flex;
+		gap: 16px;
+		align-items: flex-start;
+	}
+
+	.compliance-feature-icon {
+		width: 40px;
+		height: 40px;
+		border-radius: 10px;
+		background: rgba(8, 145, 178, 0.1);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 18px;
+		flex-shrink: 0;
+		color: #0891b2;
+	}
+
+	.compliance-feature strong {
+		font-size: 16px;
+		color: var(--primary);
+		display: block;
+		margin-bottom: 4px;
+	}
+
+	.compliance-feature p {
+		font-size: 14px;
+		color: var(--muted);
+		margin: 0;
+		line-height: 1.5;
+	}
+
+	.compliance-cta {
+		display: inline-block;
+		font-size: 15px;
+		font-weight: 700;
+		color: var(--primary);
+		text-decoration: none;
+		border-bottom: 2px solid var(--primary);
+		padding-bottom: 4px;
+		transition: color 0.2s, border-color 0.2s;
+	}
+
+	.compliance-cta:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+
+	.compliance-visual {
+		position: relative;
+	}
+
+	.compliance-img {
+		width: 100%;
+		border-radius: 16px;
+		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+	}
+
+	.compliance-badge-active {
+		position: absolute;
+		bottom: -20px;
+		right: -20px;
+		background: #fff;
+		border-radius: 12px;
+		padding: 16px 20px;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		max-width: 280px;
+	}
+
+	.compliance-dot {
+		width: 12px;
+		height: 12px;
+		background: #22c55e;
+		border-radius: 50%;
+		flex-shrink: 0;
+		animation: pulse 2s infinite;
+	}
+
+	@keyframes pulse {
+		0%, 100% { opacity: 1; }
+		50% { opacity: 0.5; }
+	}
+
+	.compliance-badge-active strong {
+		font-size: 11px;
+		letter-spacing: 0.05em;
+		color: var(--muted);
+		display: block;
+		margin-bottom: 2px;
+	}
+
+	.compliance-badge-active p {
+		font-size: 14px;
+		color: var(--primary);
+		margin: 0;
+		font-weight: 600;
+	}
+
+	@media (max-width: 900px) {
+		.reglas-grid,
+		.riesgo-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.compliance-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.compliance-visual {
+			order: -1;
+		}
+
+		.compliance-badge-active {
+			right: 10px;
+			bottom: -10px;
+		}
+	}
+</style>
