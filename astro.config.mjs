@@ -11,5 +11,6 @@ export default defineConfig({
 	trailingSlash: 'always',
 	build: {
 		assetsPrefix: '/prueba/'
-	}
+	},
+	base: import.meta.env.PROD ? '/prueba' : '/'
 });
