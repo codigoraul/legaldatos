@@ -16,8 +16,8 @@ type Post = {
 export async function getStaticPaths() {
 	const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
 
-	// Si no estamos en producción o no hay WP_URL, retornar rutas vacías
-	if (!WP_BASE || WP_BASE === 'http://localhost:10189') {
+	// Si no hay WP_URL, retornar rutas vacías
+	if (!WP_BASE) {
 		return [];
 	}
 
@@ -52,12 +52,10 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params as { slug: string };
----
-
----
 const isDev = import.meta.env.DEV;
 const basePath = isDev ? '' : '/prueba';
 ---
+
 <Layout>
 	<meta http-equiv="refresh" content={`0; url=${basePath}/articulos/${slug}`} />
 </Layout>
