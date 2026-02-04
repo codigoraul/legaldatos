@@ -1,5 +1,15 @@
 ---
-const nav = [
+// Detectar si estamos en la página principal
+const isHomePage = Astro.url.pathname === '/' || Astro.url.pathname === '/prueba/' || Astro.url.pathname.endsWith('/index.html');
+
+// Rutas diferentes para página principal vs internas
+const nav = isHomePage ? [
+	{ href: './', label: 'Inicio' },
+	{ href: './nosotros/', label: 'Nosotros' },
+	{ href: './servicios/', label: 'Servicios' },
+	{ href: './publicaciones/', label: 'Publicaciones' },
+	{ href: './contacto/', label: 'Contacto' },
+] : [
 	{ href: '/prueba/', label: 'Inicio' },
 	{ href: '/prueba/nosotros/', label: 'Nosotros' },
 	{ href: '/prueba/servicios/', label: 'Servicios' },
@@ -15,9 +25,9 @@ const menuPanelId = 'mobile-menu-panel';
 
 <header class="site-header">
 	<div class="container header-inner">
-		<a class="brand" href="/prueba/" aria-label="LegalDatos">
+		<a class="brand" href={isHomePage ? "./" : "/prueba/"} aria-label="LegalDatos">
 			
-			<img src="./logo-provisorio.png" width="186"  alt="LegalDatos" />
+			<img src="/prueba/logo-provisorio.png" width="186"  alt="LegalDatos" />
 		</a>
 
 		<nav class="nav" aria-label="Navegación principal">
