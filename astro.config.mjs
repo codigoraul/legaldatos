@@ -9,8 +9,5 @@ export default defineConfig({
 		plugins: [tailwindcss()],
 	},
 	trailingSlash: 'always',
-	build: {
-		assetsPrefix: '/prueba/'
-	},
-	base: import.meta.env.PROD ? '/prueba' : '/'
+	base: '/prueba/'
 });
