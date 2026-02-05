@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 
 const hero = {
 	title: 'Nosotros',
-	backgroundImage: '/prueba/bg-images/bg-title-4.jpg',
+	backgroundImage: '/bg-images/bg-title-4.jpg',
 };	
 ---
 
@@ -41,7 +41,7 @@ const hero = {
 	<section class="section">
 		<div class="container two-col">
 			<div class="photo">
-				<img src="/prueba/daniel-manriquez.jpg" alt="Daniel Manríquez Sansigolo" loading="lazy" />
+				<img src="/images/Daniel-Manriquez.png" alt="Daniel Manríquez Sansigolo" loading="lazy" />
 				<div class="photo-cap">
 					<div class="name">Daniel Manríquez Sansigolo</div>
 					<div class="role">Socio Fundador | Director Legal</div>
@@ -73,6 +73,15 @@ const hero = {
 				</div>
 
 				<h3 class="h3">Trayectoria Profesional</h3>
+					<ul class="p">
+						<li>Magíster en Derecho Corporativo, Universidad Central (2026).</li>
+						<li>Diplomado en Gestión Legal y Responsabilidad de la Empresa, Universidad Central (2025).</li>
+						<li>Diplomado en Responsabilidad Civil, Instituto de Estudios Judiciales (2020).</li>
+						<li>Diplomado en Actualización Jurídica, Instituto de Estudios Judiciales (2019).</li>	
+						<li>Abogado, Universidad Alberto Hurtado (2017).</li>
+							
+
+					</ul>
 			</div>
 		</div>
 	</section>
@@ -89,9 +98,9 @@ const hero = {
 		text-align: center;
 		color: rgba(255, 255, 255, 0.95);
 		background:
-			linear-gradient(180deg, rgba(6, 16, 32, 0.92), rgba(6, 16, 32, 0.78)),
-			radial-gradient(900px 520px at 70% 25%, rgba(34, 211, 238, 0.16), transparent 58%),
-			radial-gradient(760px 520px at 18% 36%, rgba(34, 211, 238, 0.10), transparent 62%),
+			linear-gradient(180deg, #001C58, rgba(0, 28, 88, 0.92)),
+			radial-gradient(900px 520px at 70% 25%, rgba(34, 211, 238, 0.12), transparent 58%),
+			radial-gradient(760px 520px at 18% 36%, rgba(34, 211, 238, 0.08), transparent 62%),
 			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700' viewBox='0 0 1200 700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%2322D3EE' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='%23A855F7' stop-opacity='.25'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23g)' stroke-opacity='.35' stroke-width='2'%3E%3Cpath d='M120 520 L260 420 L420 500 L560 380 L720 440 L900 320 L1080 380'/%3E%3Cpath d='M160 240 L310 310 L480 240 L640 300 L820 220 L980 260'/%3E%3Cpath d='M220 610 L360 560 L520 620 L700 560 L860 610'/%3E%3C/g%3E%3Cg%3E%3Cg fill='%23ffffff' fill-opacity='.08'%3E%3Ccircle cx='120' cy='520' r='10'/%3E%3Ccircle cx='260' cy='420' r='7'/%3E%3Ccircle cx='420' cy='500' r='9'/%3E%3Ccircle cx='560' cy='380' r='8'/%3E%3Ccircle cx='720' cy='440' r='9'/%3E%3Ccircle cx='900' cy='320' r='10'/%3E%3Ccircle cx='1080' cy='380' r='8'/%3E%3Ccircle cx='160' cy='240' r='8'/%3E%3Ccircle cx='310' cy='310' r='10'/%3E%3Ccircle cx='480' cy='240' r='9'/%3E%3Ccircle cx='640' cy='300' r='8'/%3E%3Ccircle cx='820' cy='220' r='9'/%3E%3Ccircle cx='980' cy='260' r='8'/%3E%3C/g%3E%3Cg fill='%2322D3EE' fill-opacity='.10'%3E%3Ccircle cx='720' cy='440' r='18'/%3E%3Ccircle cx='310' cy='310' r='16'/%3E%3Ccircle cx='900' cy='320' r='16'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 		background-size: cover;
 		background-position: center;
@@ -105,12 +114,29 @@ const hero = {
 	h1 {
 		margin: 0;
 		font-family: 'Montserrat', sans-serif;
-		font-size: clamp(42px, 6vw, 72px);
+		font-size: clamp(26px, 5vw, 52px);
 		line-height: 1.1;
 		letter-spacing: -0.02em;
 		font-weight: 700;
 	}
-
+	h3.h3	{
+		margin: 0;
+		font-size: 24px;
+		line-height: 3;
+		letter-spacing: -0.02em;
+		font-weight: 700;
+	}
+	ul li {
+		margin: 12px 0;
+		font-size: 15px;
+		line-height: 1.8;
+		color: var(--text);
+	}
+	ul li::marker {
+		color: var(--accent);
+		font-size: 1.2em;
+			
+	}
 	.accent {
 		color: var(--accent);
 	}
@@ -120,7 +146,7 @@ const hero = {
 		max-width: 720px;
 		padding: 32px 40px;
 		border-radius: 20px;
-		background: rgba(6, 16, 32, 0.5);
+		background: rgba(0, 28, 88, 0.5);
 		border: 1px solid rgba(255, 255, 255, 0.12);
 		backdrop-filter: blur(12px);
 	}
@@ -173,6 +199,9 @@ const hero = {
 		align-items: start;
 		padding-top: 18px;
 		padding-bottom: 72px;
+		max-width: 1200px;
+		margin-left: auto;
+		margin-right: auto;
 	}
 
 	.photo {
@@ -180,7 +209,7 @@ const hero = {
 		border-radius: 16px;
 		overflow: hidden;
 		box-shadow: 0 18px 50px rgba(2, 6, 23, 0.15);
-		background: rgba(2, 6, 23, 0.06);
+		max-width: 70%;
 	}
 
 	.photo img {

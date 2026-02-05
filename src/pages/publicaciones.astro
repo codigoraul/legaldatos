@@ -69,9 +69,9 @@ const filterByCategory = (posts: Post[], catId: number | undefined) => {
 	return posts.filter((p) => p.categories?.includes(catId));
 };
 
-const postsDatosLaborales = filterByCategories(allPosts, [datosPersonalesCatId, derechoLaboralCatId]);
-const postsTemasGenerales = filterByCategory(allPosts, temasGeneralesCatId);
-const postsCompliance = filterByCategory(allPosts, complianceCatId);
+const postsDatosLaborales = filterByCategories(allPosts, [datosPersonalesCatId, derechoLaboralCatId]).slice(0, 12);
+const postsTemasGenerales = filterByCategory(allPosts, temasGeneralesCatId).slice(0, 12);
+const postsCompliance = filterByCategory(allPosts, complianceCatId).slice(0, 12);
 
 const allUsedCatIds = [datosPersonalesCatId, derechoLaboralCatId, temasGeneralesCatId, complianceCatId].filter((id): id is number => id !== undefined);
 
@@ -88,7 +88,7 @@ const formatDate = (dateStr?: string) => {
 
 const hero = {
 	title: 'Publicaciones',
-	backgroundImage: '/prueba/bg-images/bg-title-7.jpg',
+	backgroundImage: '/bg-images/bg-title-7.jpg',
 };
 
 const sections = [
