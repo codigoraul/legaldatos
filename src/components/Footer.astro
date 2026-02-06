@@ -9,7 +9,7 @@ const basePath = isDev ? '' : '/prueba';
 	<div class="container footer-grid">
 		<div class="col">
 			<a class="brand" href={`${basePath}/`} aria-label="LegalDatos">
-				<img src={`${basePath}/logo-legaldatos.png`} width="136"  alt="LegalDatos" />
+				<img src={`${basePath}logo-legaldatos.png`} width="136"  alt="LegalDatos" />
 			</a>
 			<p class="desc" style="font-size: 16px;">
 				Nuestra consultora ofrece asesorías a todo tipo de organizaciones en la adopción 
@@ -39,8 +39,8 @@ const basePath = isDev ? '' : '/prueba';
 	</div>
 
 	<div class="container bottom">
-		<p class="copyright">© {year} LegalDatos. Todos los derechos reservados.</p>
-		<a class="link" href="/pol%C3%ADtica-de-privacidad">Política de Privacidad</a>
+		<p class="copyright">@LegalDatos por <a href="https://diseñopaginas.cl" target="_blank" rel="noopener noreferrer">diseñopaginas.cl</a></p>
+		<a class="link" href={`${basePath}/politica-de-privacidad/`}>Política de Privacidad</a>
 	</div>
 </footer>
 
