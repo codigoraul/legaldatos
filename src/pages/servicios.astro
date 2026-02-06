@@ -29,12 +29,18 @@ try {
 	let totalPages = 1;
 
 	while (page <= totalPages) {
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos timeout
+		
 		const res = await fetch(
 			`${WP_BASE}/wp-json/wp/v2/servicio?_embed&per_page=${perPage}&page=${page}`,
 			{
 				headers: { Accept: 'application/json' },
+				signal: controller.signal,
 			}
 		);
+		clearTimeout(timeoutId);
+		
 		if (!res.ok) {
 			throw new Error(`WP ${res.status}`);
 		}
@@ -46,6 +52,7 @@ try {
 		page += 1;
 	}
 } catch (e) {
+	console.error('Error cargando servicios:', e);
 	loadError = e instanceof Error ? e.message : 'Error desconocido';
 }
 
