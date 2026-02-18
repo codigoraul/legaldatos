@@ -105,7 +105,7 @@ const breadcrumbs = resolvedHero
 				<PageHero
 					title={resolvedHero.title}
 					breadcrumbs={breadcrumbs}
-					backgroundImage={resolvedHero.backgroundImage ?? '/bg-images/bg-title.jpg'}
+					backgroundImage={resolvedHero.backgroundImage ?? `${import.meta.env.BASE_URL}bg-images/bg-title.webp`}
 					backgroundPosition="60% 39%"
 				/>
 			</>
