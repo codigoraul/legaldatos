@@ -62,12 +62,22 @@ try {
 	info = fallback;
 }
 
+const seo = {
+	title: 'Contacto | LegalDatos - Asesoría en Protección de Datos',
+	description: 'Contacta a LegalDatos para asesoría especializada en protección de datos personales y compliance bajo la Ley 21.719. Teléfono: +56 9 6843 4272. Ubicación: Huérfanos 757, Santiago. Responde a tus consultas legales.',
+	keywords: 'contacto LegalDatos, asesoría protección de datos, consulta legal datos, teléfono abogado datos, contacto compliance Chile, formulario contacto, consultoría Ley 21.719, Santiago abogados',
+	canonical: import.meta.env.SITE + import.meta.env.BASE_URL + 'contacto/',
+	ogTitle: 'Contacto | LegalDatos - Expertos en Protección de Datos',
+	ogDescription: 'Contacta a nuestros expertos en protección de datos personales. Asesoría legal especializada en Ley 21.719. Atención personalizada en Santiago.',
+	ogImage: import.meta.env.SITE + import.meta.env.BASE_URL + 'logo-legaldatos.png'
+};
+
 const hero = {
 	title: 'Contacto',
 };
 ---
 
-<Layout hero={hero}>
+<Layout hero={hero} seo={seo}>
 	<section class="section contact-body">
 		<div class="container">
 			<h1 class="page-title" style="padding-top: 28px; padding-bottom: 12px;">Canales de Contacto</h1>

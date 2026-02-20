@@ -1,12 +1,22 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
+const seo = {
+	title: 'Sobre Nosotros | LegalDatos - Estudio Jurídico Especializado',
+	description: 'Conoce a LegalDatos, división especializada del estudio jurídico Manríquez Rivera. Expertos en protección de datos personales, compliance de datos y Ley 21.719 en Chile. Más de 15 años de experiencia corporativa.',
+	keywords: 'LegalDatos, Manríquez Rivera, estudio jurídico Chile, protección de datos personales, compliance de datos, experiencia corporativa, abogados especializados, Ley 21.719, asesoría legal datos, consultoría jurídica',
+	canonical: import.meta.env.SITE + import.meta.env.BASE_URL + 'nosotros/',
+	ogTitle: 'Sobre Nosotros | LegalDatos - Expertos en Protección de Datos',
+	ogDescription: 'Conoce nuestra trayectoria como estudio jurídico especializado en protección de datos y compliance. División de Manríquez Rivera con más de 15 años de experiencia.',
+	ogImage: import.meta.env.SITE + import.meta.env.BASE_URL + 'logo-legaldatos.png'
+};
+
 const hero = {
 	title: 'Nosotros',
 };	
 ---
 
-<Layout hero={hero}>
+<Layout hero={hero} seo={seo}>
 	<section class="hero">
 		<div class="container hero-inner">
 			<h1>

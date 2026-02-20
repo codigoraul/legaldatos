@@ -1,6 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
+const seo = {
+	title: 'Servicios de Protección de Datos | LegalDatos Chile',
+	description: 'Descubrir nuestros servicios especializados en compliance de datos, implementación de modelos de prevención y asesoría legal bajo la Ley 21.719. Proteja su empresa con expertos en protección de datos personales.',
+	keywords: 'servicios protección de datos, compliance de datos, Ley 21.719, modelo de prevención, asesoría legal datos, consultoría compliance, seguridad datos personales, implementación normativas, LegalDatos Chile',
+	canonical: import.meta.env.SITE + import.meta.env.BASE_URL + 'servicios/',
+	ogTitle: 'Servicios de Protección de Datos y Compliance | LegalDatos',
+	ogDescription: 'Servicios especializados en protección de datos personales. Implementamos modelos de prevención y compliance para cumplir con la Ley 21.719.',
+	ogImage: import.meta.env.SITE + import.meta.env.BASE_URL + 'logo-legaldatos.png'
+};
+
 const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
 const isDev = import.meta.env.DEV;
 const basePath = isDev ? '' : '/prueba';
@@ -61,7 +71,7 @@ const hero = {
 };
 ---
 
-<Layout hero={hero}>
+<Layout hero={hero} seo={seo}>
 	<section class="section">
 		<div class="container">
 			<h1 class="page-title">Nuestros Servicios</h1>
