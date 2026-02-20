@@ -8,22 +8,22 @@ const basePath = isDev ? '' : '/prueba';
 <footer class="site-footer">
 	<div class="container footer-grid">
 		<div class="col">
-			<a class="brand" href={`${basePath}/`} aria-label="LegalDatos">
-				<img src={`${basePath}logo-legaldatos.png`} width="136"  alt="LegalDatos" />
+			<a class="brand" href={`${import.meta.env.BASE_URL}`} aria-label="LegalDatos">
+				<img src={`${import.meta.env.BASE_URL}logo-legaldatos.png`} width="136"  alt="LegalDatos" />
 			</a>
 			<p class="desc" style="font-size: 16px;">
 				Nuestra consultora ofrece asesorías a todo tipo de organizaciones en la adopción 
 				de mejores prácticas para la protección de datos, integrando la actual normativa
 				 de datos personales y compliance de datos en el núcleo de su gobernanza.
 			</p>
-			<a class="link" href="/nosotros">Nosotros</a>
+			<a class="link" href={`${import.meta.env.BASE_URL}nosotros`}>Nosotros</a>
 		</div>
 
 		<div class="col">
 			<h3 class="title">Nuestros servicios</h3>
-			<a class="link" href="/servicios">Ver servicios</a>
-			<a class="link" href="/contacto">Solicitar asesoría</a>
-			<a class="link" href="/publicaciones">Publicaciones</a>
+			<a class="link" href={`${import.meta.env.BASE_URL}servicios`}>Ver servicios</a>
+			<a class="link" href={`${import.meta.env.BASE_URL}contacto`}>Solicitar asesoría</a>
+			<a class="link" href={`${import.meta.env.BASE_URL}publicaciones`}>Publicaciones</a>
 		</div>
 
 		<div class="col">
@@ -58,7 +58,7 @@ const basePath = isDev ? '' : '/prueba';
 
 	<div class="container bottom">
 		<p class="copyright">@2026  LegalDatos por <a href="https://diseñopaginas.cl" target="_blank" rel="noopener noreferrer">diseñopaginas.cl</a></p>
-		<a class="link" href={`${basePath}/politica-de-privacidad/`}>Política de Privacidad</a>
+		<a class="link" href={`${import.meta.env.BASE_URL}politica-de-privacidad/`}>Política de Privacidad</a>
 	</div>
 </footer>
 
