@@ -73,68 +73,72 @@ const hero = {
 			<h1 class="page-title" style="padding-top: 28px; padding-bottom: 12px;">Canales de Contacto</h1>
 
 			<div class="grid">
-				<div class="panel">
-					<h2 class="panel-title">Datos de contacto</h2>
-					<div class="items">
-						<div class="item">
-							<div class="k">Email</div>
-							<a class="v link" href={`mailto:${info.email}`}>{info.email}</a>
+				<div>
+					<h2 class="section-subtitle">Datos de contacto</h2>
+					<div class="panel">
+						<div class="items">
+							<div class="item">
+								<div class="k">Email</div>
+								<a class="v link" href={`mailto:${info.email}`}>{info.email}</a>
+							</div>
+							<div class="item">
+								<div class="k">Teléfono</div>
+								<a class="v link" href={`tel:${info.phone.replace(/\s+/g, '')}`}>{info.phone}</a>
+							</div>
+							<div class="item">
+								<div class="k">Dirección</div>
+								<div class="v" style="white-space: pre-line;">{info.address}</div>
+							</div>
+							<div class="item">
+								<div class="k">Horario</div>
+								<div class="v">{info.hours}</div>
+							</div>
 						</div>
-						<div class="item">
-							<div class="k">Teléfono</div>
-							<a class="v link" href={`tel:${info.phone.replace(/\s+/g, '')}`}>{info.phone}</a>
-						</div>
-						<div class="item">
-							<div class="k">Dirección</div>
-							<div class="v" style="white-space: pre-line;">{info.address}</div>
-						</div>
-						<div class="item">
-							<div class="k">Horario</div>
-							<div class="v">{info.hours}</div>
-						</div>
-					</div>
 
-					<div class="meta">
-						<div class="tag">Protección de datos</div>
-						<div class="tag">Cumplimiento</div>
-						<div class="tag">Ley 21.719</div>
+						<div class="meta">
+							<div class="tag">Protección de datos</div>
+							<div class="tag">Cumplimiento</div>
+							<div class="tag">Ley 21.719</div>
+						</div>
 					</div>
 				</div>
 
-				<div class="panel">
-					<h2 class="panel-title">Enviar mensaje</h2>
-					<form
-						class="form"
-						action={`mailto:${info.email}`}
-						method="post"
-						enctype="text/plain"
-					>
-						<div class="row">
+				<div>
+					<h2 class="section-subtitle">Formulario de contacto</h2>
+					<div class="panel">
+						<form
+							class="form"
+							action={`mailto:${info.email}`}
+							method="post"
+							enctype="text/plain"
+						>
+							<div class="row">
+								<label class="field">
+									<span class="label">Nombre</span>
+									<input name="Nombre" type="text" required placeholder="Tu nombre" />
+								</label>
+								<label class="field">
+									<span class="label">Email</span>
+									<input name="Email" type="email" required placeholder="tu@correo.com" />
+								</label>
+							</div>
+
 							<label class="field">
-								<span class="label">Nombre</span>
-								<input name="Nombre" type="text" required placeholder="Tu nombre" />
+								<span class="label">Asunto</span>
+								<input name="Asunto" type="text" required placeholder="Ej: Consulta por cumplimiento" />
 							</label>
+
 							<label class="field">
-								<span class="label">Email</span>
-								<input name="Email" type="email" required placeholder="tu@correo.com" />
+								<span class="label">Mensaje</span>
+								<textarea name="Mensaje" required rows={7} placeholder="Cuéntanos tu caso y contexto (empresa, industria, urgencia, etc.)"></textarea>
 							</label>
-						</div>
 
-						<label class="field">
-							<span class="label">Asunto</span>
-							<input name="Asunto" type="text" required placeholder="Ej: Consulta por cumplimiento" />
-						</label>
-
-						<label class="field">
-							<span class="label">Mensaje</span>
-							<textarea name="Mensaje" required rows={7} placeholder="Cuéntanos tu caso y contexto (empresa, industria, urgencia, etc.)"></textarea>
-						</label>
-
-						<div class="actions">
-							<button class="btn btn-primary" type="submit">Enviar</button>
-							<p class="hint">Se abrirá tu cliente de correo para enviar el mensaje.</p>
-						</div>
-					</form>
+							<div class="actions">
+								<button class="btn btn-primary" type="submit">Enviar</button>
+								<p class="hint">Se abrirá tu cliente de correo para enviar el mensaje.</p>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -181,6 +185,14 @@ const hero = {
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		color: rgba(42, 55, 85, 0.92);
+	}
+
+	.section-subtitle {
+		margin: 0 0 16px;
+		font-size: 18px;
+		font-weight: 600;
+		color: var(--primary);
+		letter-spacing: -0.01em;
 	}
 
 	.items {
