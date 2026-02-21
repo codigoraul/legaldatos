@@ -81,9 +81,9 @@ const actionUrl = `${basePath}/contacto.php`;
 										required 
 										minlength="2"
 										maxlength="50"
-										pattern="[A-Za-z\sáéíóúÁÉÍÓÚñÑ]+"
-										placeholder="Tu nombre (mínimo 2 caracteres)"
-										title="El nombre debe contener solo letras y tener al menos 2 caracteres"
+										pattern="[A-Za-záéíóúÁÉÍÓÚñÑ]+(\s[A-Za-záéíóúÁÉÍÓÚñÑ]+)*"
+										placeholder="Tu nombre completo"
+										title="Ingresa tu nombre completo (solo letras y espacios)"
 									/>
 								</label>
 								<label class="field">
