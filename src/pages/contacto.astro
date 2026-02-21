@@ -67,10 +67,11 @@ const hero = {
 					<div class="panel">
 						<form
 							class="form"
-							action={`mailto:${testEmail}`}
-							method="post"
-							enctype="text/plain"
+							action="/api/contacto"
+							method="POST"
 						>
+							<input type="hidden" name="csrf_token" value="secure_token_123456" />
+							<input type="hidden" name="form_security" value="legaldatos_secure_form" />
 							<div class="row">
 								<label class="field">
 									<span class="label">Nombre</span>
@@ -97,7 +98,7 @@ const hero = {
 									<span class="btn-text">Enviar Mensaje</span>
 									<span class="btn-icon">→</span>
 								</button>
-								<p class="hint">Se abrirá tu cliente de correo para enviar el mensaje.</p>
+								<p class="hint">Tu mensaje será enviado de forma segura a nuestros servidores.</p>
 							</div>
 						</form>
 					</div>
