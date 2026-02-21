@@ -144,52 +144,65 @@ const hero = {
 </Layout>
 
 <script>
-	const contactForm = document.getElementById('contactForm');
-	if (!contactForm) return;
-	
-	contactForm.addEventListener('submit', async (e) => {
-		e.preventDefault();
-		
-		const form = e.target as HTMLFormElement;
-		const submitBtn = form.querySelector('.submit-btn') as HTMLButtonElement;
-		const messageDiv = document.getElementById('formMessage');
-		
-		if (!submitBtn || !messageDiv) return;
-		
-		const originalText = submitBtn.innerHTML;
-		
-		// Deshabilitar botón y mostrar loading
-		submitBtn.disabled = true;
-		submitBtn.innerHTML = '<span class="btn-text">Enviando...</span><span class="btn-icon">⏳</span>';
-		messageDiv.textContent = '';
-		messageDiv.className = 'form-message';
-		
-		try {
-			const formData = new FormData(form);
-			const response = await fetch('/api/contacto', {
-				method: 'POST',
-				body: formData
-			});
-			
-			const result = await response.json();
-			
-			if (result.success) {
-				messageDiv.textContent = '✅ Mensaje enviado correctamente. Te responderemos a la brevedad.';
-				messageDiv.classList.add('success');
-				form.reset();
-			} else {
-				messageDiv.textContent = `❌ Error: ${result.error}`;
-				messageDiv.classList.add('error');
-			}
-		} catch (error) {
-			messageDiv.textContent = '❌ Error de conexión. Por favor, intenta nuevamente.';
-			messageDiv.classList.add('error');
-		} finally {
-			// Restaurar botón
-			submitBtn.disabled = false;
-			submitBtn.innerHTML = originalText;
+	// Función simple y directa que siempre funciona
+	function handleFormSubmit() {
+		const form = document.getElementById('contactForm');
+		if (!form) {
+			return;
 		}
-	});
+		
+		form.onsubmit = async function(e) {
+			e.preventDefault();
+			
+			const submitBtn = this.querySelector('.submit-btn');
+			const messageDiv = document.getElementById('formMessage');
+			
+			if (!submitBtn || !messageDiv) {
+				return;
+			}
+			
+			const originalText = submitBtn.innerHTML;
+			
+			// Loading state
+			submitBtn.disabled = true;
+			submitBtn.innerHTML = '<span class="btn-text">Enviando...</span><span class="btn-icon">⏳</span>';
+			messageDiv.innerHTML = '';
+			messageDiv.className = 'form-message';
+			
+			try {
+				const formData = new FormData(this);
+				const response = await fetch('/api/contacto', {
+					method: 'POST',
+					body: formData
+				});
+				
+				const result = await response.json();
+				
+				if (result.success) {
+					messageDiv.innerHTML = '✅ Mensaje enviado correctamente. Te responderemos a la brevedad.';
+					messageDiv.classList.add('success');
+					this.reset();
+				} else {
+					messageDiv.innerHTML = `❌ Error: ${result.error}`;
+					messageDiv.classList.add('error');
+				}
+			} catch (error) {
+				messageDiv.innerHTML = '❌ Error de conexión. Por favor, intenta nuevamente.';
+				messageDiv.classList.add('error');
+			} finally {
+				// Restaurar botón
+				submitBtn.disabled = false;
+				submitBtn.innerHTML = originalText;
+			}
+		};
+	}
+	
+	// Ejecutar cuando el DOM esté listo
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', handleFormSubmit);
+	} else {
+		handleFormSubmit();
+	}
 </script>
 
 <style>
