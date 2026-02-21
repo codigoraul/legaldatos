@@ -74,22 +74,56 @@ const hero = {
 							<div class="row">
 								<label class="field">
 									<span class="label">Nombre</span>
-									<input name="Nombre" type="text" required placeholder="Tu nombre" />
+									<input 
+										name="Nombre" 
+										type="text" 
+										required 
+										minlength="2"
+										maxlength="50"
+										pattern="[A-Za-z\sáéíóúÁÉÍÓÚñÑ]+"
+										placeholder="Tu nombre (mínimo 2 caracteres)"
+										title="El nombre debe contener solo letras y tener al menos 2 caracteres"
+									/>
 								</label>
 								<label class="field">
 									<span class="label">Email</span>
-									<input name="Email" type="email" required placeholder="tu@correo.com" />
+									<input 
+										name="Email" 
+										type="email" 
+										required 
+										minlength="5"
+										maxlength="100"
+										placeholder="tu@correo.com"
+										title="Ingresa un email válido"
+									/>
 								</label>
 							</div>
 
 							<label class="field">
 								<span class="label">Asunto</span>
-								<input name="Asunto" type="text" required placeholder="Ej: Consulta por cumplimiento" />
+								<input 
+									name="Asunto" 
+									type="text" 
+									required 
+									minlength="3"
+									maxlength="100"
+									pattern="[A-Za-z0-9\sáéíóúÁÉÍÓÚñÑ.,?¿!¡]+"
+									placeholder="Ej: Consulta por cumplimiento"
+									title="El asunto debe tener entre 3 y 100 caracteres"
+								/>
 							</label>
 
 							<label class="field">
 								<span class="label">Mensaje</span>
-								<textarea name="Mensaje" required rows={7} placeholder="Cuéntanos tu caso y contexto (empresa, industria, urgencia, etc.)"></textarea>
+								<textarea 
+									name="Mensaje" 
+									required 
+									minlength="10"
+									maxlength="1000"
+									rows={7} 
+									placeholder="Cuéntanos tu caso y contexto (empresa, industria, urgencia, etc.)"
+									title="El mensaje debe tener entre 10 y 1000 caracteres"
+								></textarea>
 							</label>
 
 							<div class="actions">
