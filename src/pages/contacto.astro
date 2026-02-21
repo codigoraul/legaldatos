@@ -67,9 +67,8 @@ const hero = {
 					<div class="panel">
 						<form
 							class="form"
-							action={`mailto:${testEmail}`}
-							method="post"
-							enctype="text/plain"
+							action="/api/contacto"
+							method="POST"
 						>
 							<div class="row">
 								<label class="field">
@@ -97,7 +96,7 @@ const hero = {
 									<span class="btn-text">Enviar Mensaje</span>
 									<span class="btn-icon">→</span>
 								</button>
-								<p class="hint">Se abrirá tu cliente de correo para enviar el mensaje.</p>
+								<p class="hint">Tu mensaje será enviado de forma segura a nuestros servidores.</p>
 							</div>
 						</form>
 					</div>
