@@ -70,6 +70,7 @@ const hero = {
 							id="contactForm"
 							action="/api/contacto"
 							method="POST"
+							novalidate
 						>
 							<div class="row">
 								<label class="field">
@@ -144,65 +145,83 @@ const hero = {
 </Layout>
 
 <script>
-	// Función simple y directa que siempre funciona
-	function handleFormSubmit() {
-		const form = document.getElementById('contactForm');
-		if (!form) {
-			return;
-		}
+	// Forzar limpieza de caché y ejecución inmediata
+	(function() {
+		'use strict';
 		
-		form.onsubmit = async function(e) {
-			e.preventDefault();
-			
-			const submitBtn = this.querySelector('.submit-btn');
-			const messageDiv = document.getElementById('formMessage');
-			
-			if (!submitBtn || !messageDiv) {
+		function handleFormSubmit() {
+			const form = document.getElementById('contactForm');
+			if (!form) {
+				console.log('Formulario no encontrado');
 				return;
 			}
 			
-			const originalText = submitBtn.innerHTML;
+			console.log('Formulario encontrado, configurando handler');
 			
-			// Loading state
-			submitBtn.disabled = true;
-			submitBtn.innerHTML = '<span class="btn-text">Enviando...</span><span class="btn-icon">⏳</span>';
-			messageDiv.innerHTML = '';
-			messageDiv.className = 'form-message';
+			// Remover cualquier event listener anterior
+			form.onsubmit = null;
 			
-			try {
-				const formData = new FormData(this);
-				const response = await fetch('/api/contacto', {
-					method: 'POST',
-					body: formData
-				});
+			form.onsubmit = async function(e) {
+				console.log('Submit interceptado');
+				e.preventDefault();
+				e.stopPropagation();
 				
-				const result = await response.json();
+				const submitBtn = this.querySelector('.submit-btn');
+				const messageDiv = document.getElementById('formMessage');
 				
-				if (result.success) {
-					messageDiv.innerHTML = '✅ Mensaje enviado correctamente. Te responderemos a la brevedad.';
-					messageDiv.classList.add('success');
-					this.reset();
-				} else {
-					messageDiv.innerHTML = `❌ Error: ${result.error}`;
-					messageDiv.classList.add('error');
+				if (!submitBtn || !messageDiv) {
+					console.log('Botón o message div no encontrado');
+					return;
 				}
-			} catch (error) {
-				messageDiv.innerHTML = '❌ Error de conexión. Por favor, intenta nuevamente.';
-				messageDiv.classList.add('error');
-			} finally {
-				// Restaurar botón
-				submitBtn.disabled = false;
-				submitBtn.innerHTML = originalText;
-			}
-		};
-	}
-	
-	// Ejecutar cuando el DOM esté listo
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', handleFormSubmit);
-	} else {
+				
+				const originalText = submitBtn.innerHTML;
+				
+				// Loading state
+				submitBtn.disabled = true;
+				submitBtn.innerHTML = '<span class="btn-text">Enviando...</span><span class="btn-icon">⏳</span>';
+				messageDiv.innerHTML = '';
+				messageDiv.className = 'form-message';
+				
+				try {
+					const formData = new FormData(this);
+					console.log('Enviando datos...');
+					
+					const response = await fetch('/api/contacto', {
+						method: 'POST',
+						body: formData,
+						cache: 'no-cache'
+					});
+					
+					const result = await response.json();
+					console.log('Respuesta:', result);
+					
+					if (result.success) {
+						messageDiv.innerHTML = '✅ Mensaje enviado correctamente. Te responderemos a la brevedad.';
+						messageDiv.classList.add('success');
+						this.reset();
+					} else {
+						messageDiv.innerHTML = `❌ Error: ${result.error}`;
+						messageDiv.classList.add('error');
+					}
+				} catch (error) {
+					console.error('Error:', error);
+					messageDiv.innerHTML = '❌ Error de conexión. Por favor, intenta nuevamente.';
+					messageDiv.classList.add('error');
+				} finally {
+					// Restaurar botón
+					submitBtn.disabled = false;
+					submitBtn.innerHTML = originalText;
+				}
+			};
+		}
+		
+		// Ejecutar inmediatamente y también en DOMContentLoaded
 		handleFormSubmit();
-	}
+		
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', handleFormSubmit);
+		}
+	})();
 </script>
 
 <style>
