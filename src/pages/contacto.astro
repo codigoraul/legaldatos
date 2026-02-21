@@ -18,12 +18,13 @@ const info = {
 	hours: 'Lunes a Viernes 9:00 - 18:00',
 };
 
-// Email para pruebas
-const testEmail = 'codigoraul@mail.com';
-
 const hero = {
 	title: 'Contacto',
 };
+
+const rawBase = import.meta.env.BASE_URL ?? '/';
+const basePath = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
+const actionUrl = `${basePath}/contacto.php`;
 ---
 
 <Layout hero={hero} seo={seo}>
@@ -68,15 +69,15 @@ const hero = {
 						<form
 							class="form"
 							id="contactForm"
-							action="/api/contacto"
+							action={actionUrl}
 							method="POST"
-							novalidate
 						>
+							<input type="text" name="_gotcha" class="honeypot" tabindex="-1" autocomplete="off" />
 							<div class="row">
 								<label class="field">
 									<span class="label">Nombre</span>
 									<input 
-										name="Nombre" 
+										name="nombre" 
 										type="text" 
 										required 
 										minlength="2"
@@ -89,7 +90,7 @@ const hero = {
 								<label class="field">
 									<span class="label">Email</span>
 									<input 
-										name="Email" 
+										name="email" 
 										type="email" 
 										required 
 										minlength="5"
@@ -101,23 +102,23 @@ const hero = {
 							</div>
 
 							<label class="field">
-								<span class="label">Asunto</span>
+								<span class="label">Teléfono</span>
 								<input 
-									name="Asunto" 
-									type="text" 
+									name="telefono" 
+									type="tel" 
 									required 
-									minlength="3"
-									maxlength="100"
-									pattern="[A-Za-z0-9\sáéíóúÁÉÍÓÚñÑ.,?¿!¡]+"
-									placeholder="Ej: Consulta por cumplimiento"
-									title="El asunto debe tener entre 3 y 100 caracteres"
+									minlength="8"
+									maxlength="25"
+									pattern="[0-9+()\-\s]+"
+									placeholder="Ej: +56 9 6843 4272"
+									title="Ingresa tu teléfono con al menos 8 caracteres"
 								/>
 							</label>
 
 							<label class="field">
 								<span class="label">Mensaje</span>
 								<textarea 
-									name="Mensaje" 
+									name="mensaje" 
 									required 
 									minlength="10"
 									maxlength="1000"
@@ -128,13 +129,13 @@ const hero = {
 							</label>
 
 							<div class="actions">
-								<button class="submit-btn" type="submit">
+								<button class="submit-btn" type="submit" id="submitBtn">
 									<span class="btn-text">Enviar Mensaje</span>
 									<span class="btn-icon">→</span>
 								</button>
 								<p class="hint">Tu mensaje será enviado de forma segura a nuestros servidores.</p>
 								
-								<div id="formMessage" class="form-message"></div>
+								<div id="formMessage" class="form-message" role="status" aria-live="polite"></div>
 							</div>
 						</form>
 					</div>
@@ -145,83 +146,56 @@ const hero = {
 </Layout>
 
 <script>
-	// Forzar limpieza de caché y ejecución inmediata
-	(function() {
-		'use strict';
-		
-		function handleFormSubmit() {
-			const form = document.getElementById('contactForm');
-			if (!form) {
-				console.log('Formulario no encontrado');
-				return;
-			}
-			
-			console.log('Formulario encontrado, configurando handler');
-			
-			// Remover cualquier event listener anterior
-			form.onsubmit = null;
-			
-			form.onsubmit = async function(e) {
-				console.log('Submit interceptado');
-				e.preventDefault();
-				e.stopPropagation();
-				
-				const submitBtn = this.querySelector('.submit-btn');
-				const messageDiv = document.getElementById('formMessage');
-				
-				if (!submitBtn || !messageDiv) {
-					console.log('Botón o message div no encontrado');
-					return;
-				}
-				
-				const originalText = submitBtn.innerHTML;
-				
-				// Loading state
-				submitBtn.disabled = true;
-				submitBtn.innerHTML = '<span class="btn-text">Enviando...</span><span class="btn-icon">⏳</span>';
-				messageDiv.innerHTML = '';
-				messageDiv.className = 'form-message';
-				
+	document.addEventListener('DOMContentLoaded', () => {
+		const form = document.getElementById('contactForm');
+		const statusEl = document.getElementById('formMessage');
+		const submitBtn = document.getElementById('submitBtn');
+
+		if (!form || !statusEl || !submitBtn) return;
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+
+			const formData = new FormData(form);
+			const originalContent = submitBtn.innerHTML;
+			submitBtn.disabled = true;
+			submitBtn.innerHTML = '<span class="btn-text">Enviando...</span><span class="btn-icon spinner"></span>';
+			statusEl.textContent = '';
+			statusEl.className = 'form-message';
+
+			try {
+				const response = await fetch(form.action, {
+					method: form.method || 'POST',
+					body: formData,
+					headers: { Accept: 'application/json' },
+					cache: 'no-cache',
+				});
+
+				let result: Record<string, any> | null = null;
 				try {
-					const formData = new FormData(this);
-					console.log('Enviando datos...');
-					
-					const response = await fetch('/api/contacto', {
-						method: 'POST',
-						body: formData,
-						cache: 'no-cache'
-					});
-					
-					const result = await response.json();
-					console.log('Respuesta:', result);
-					
-					if (result.success) {
-						messageDiv.innerHTML = '✅ Mensaje enviado correctamente. Te responderemos a la brevedad.';
-						messageDiv.classList.add('success');
-						this.reset();
-					} else {
-						messageDiv.innerHTML = `❌ Error: ${result.error}`;
-						messageDiv.classList.add('error');
-					}
-				} catch (error) {
-					console.error('Error:', error);
-					messageDiv.innerHTML = '❌ Error de conexión. Por favor, intenta nuevamente.';
-					messageDiv.classList.add('error');
-				} finally {
-					// Restaurar botón
-					submitBtn.disabled = false;
-					submitBtn.innerHTML = originalText;
+					result = await response.json();
+				} catch (err) {
+					result = null;
 				}
-			};
-		}
-		
-		// Ejecutar inmediatamente y también en DOMContentLoaded
-		handleFormSubmit();
-		
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', handleFormSubmit);
-		}
-	})();
+
+				if (response.ok && result?.success) {
+					statusEl.textContent = result.message || 'Mensaje enviado correctamente. Te responderemos pronto.';
+					statusEl.classList.add('success');
+					form.reset();
+				} else {
+					const errorMessage = result?.message || result?.error || 'No se pudo enviar el mensaje. Intenta nuevamente.';
+					statusEl.textContent = `❌ ${errorMessage}`;
+					statusEl.classList.add('error');
+				}
+			} catch (error) {
+				statusEl.textContent = '❌ Error de conexión. Por favor intenta nuevamente.';
+				statusEl.classList.add('error');
+			} finally {
+				submitBtn.disabled = false;
+				submitBtn.innerHTML = originalContent;
+			}
+		});
+	});
 </script>
 
 <style>
