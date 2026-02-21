@@ -25,25 +25,25 @@ const { hero, showHero = true, seo } = Astro.props as { hero?: LayoutHero; showH
 const pathname = Astro.url.pathname;
 
 const defaultHeroByPath: Record<string, LayoutHero> = {
-	'/prueba/servicios': {
+	'/servicios': {
 		title: 'Servicios',
 	},
-	'/prueba/articulos': {
+	'/articulos': {
 		title: 'Artículos',
 	},
-	'/prueba/contacto': {
+	'/contacto': {
 		title: 'Canales de Contacto',
 	},
-	'/prueba/nosotros': {
+	'/nosotros': {
 		title: 'Nosotros',
 	},
-	'/prueba/politica-de-privacidad': {
+	'/politica-de-privacidad': {
 		title: 'Política de Privacidad',
 	},
 };
 
 const inferredHero: LayoutHero | undefined =
-	pathname.startsWith('/prueba/articulos/') && pathname !== '/prueba/articulos'
+	pathname.startsWith('/articulos/') && pathname !== '/articulos'
 		? { title: 'Artículo' }
 		: defaultHeroByPath[pathname];
 

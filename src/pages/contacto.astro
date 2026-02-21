@@ -1,75 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
-
-type ContactInfo = {
-	email?: string;
-	phone?: string;
-	address?: string;
-	hours?: string;
+const seo = {
+	title: 'Contacto | LegalDatos - Asesoría en Protección de Datos',
+	description: 'Contacta a LegalDatos para asesoría especializada en protección de datos personales y compliance bajo la Ley 21.719. Teléfono: +56 9 6843 4272. Ubicación: Huérfanos 757, Santiago.',
+	keywords: 'contacto LegalDatos, asesoría protección de datos, consulta legal datos, teléfono abogado datos, contacto compliance Chile, formulario contacto, consultoría Ley 21.719, Santiago abogados',
+	canonical: `${import.meta.env.BASE_URL}contacto/`,
+	ogTitle: 'Contacto | LegalDatos - Expertos en Protección de Datos',
+	ogDescription: 'Contacta a nuestros expertos en protección de datos personales. Asesoría legal especializada en Ley 21.719.',
+	ogImage: `${import.meta.env.BASE_URL}logo-legaldatos.png`
 };
 
-const fallback: Required<ContactInfo> = {
+const info = {
 	email: 'contacto@legaldatos.cl',
 	phone: '+56 9 68434272',
 	address: 'Huérfanos 757, Oficina 614\nSantiago Centro',
 	hours: 'Lunes a Viernes 9:00 - 18:00',
-};
-
-const tryFetchJson = async (url: string) => {
-	const res = await fetch(url, { headers: { Accept: 'application/json' } });
-	if (!res.ok) throw new Error(`HTTP ${res.status}`);
-	return res.json();
-};
-
-let info: Required<ContactInfo> = fallback;
-
-try {
-	const candidates = [
-		`${WP_BASE}/wp-json/legaldatos/v1/contacto`,
-		`${WP_BASE}/wp-json/legaldatos/v1/contact`,
-		`${WP_BASE}/wp-json/wp/v2/contacto`,
-		`${WP_BASE}/wp-json/wp/v2/contact`,
-		`${WP_BASE}/wp-json/wp/v2/pages?slug=contacto`,
-	];
-
-	let data: any = null;
-	for (const url of candidates) {
-		try {
-			data = await tryFetchJson(url);
-			break;
-		} catch {
-			// ignore
-		}
-	}
-
-	const acf = Array.isArray(data) ? data?.[0]?.acf : data?.acf;
-	const source = acf ?? data;
-
-	const email = source?.email ?? source?.correo ?? source?.contact_email;
-	const phone = source?.telefono ?? source?.phone ?? source?.contact_phone;
-	const address = source?.direccion ?? source?.address ?? source?.contact_address;
-	const hours = source?.horario ?? source?.hours ?? source?.contact_hours;
-
-	info = {
-		email: typeof email === 'string' && email.trim() ? email.trim() : fallback.email,
-		phone: typeof phone === 'string' && phone.trim() ? phone.trim() : fallback.phone,
-		address: typeof address === 'string' && address.trim() ? address.trim() : fallback.address,
-		hours: typeof hours === 'string' && hours.trim() ? hours.trim() : fallback.hours,
-	};
-} catch {
-	info = fallback;
-}
-
-const seo = {
-	title: 'Contacto | LegalDatos - Asesoría en Protección de Datos',
-	description: 'Contacta a LegalDatos para asesoría especializada en protección de datos personales y compliance bajo la Ley 21.719. Teléfono: +56 9 6843 4272. Ubicación: Huérfanos 757, Santiago. Responde a tus consultas legales.',
-	keywords: 'contacto LegalDatos, asesoría protección de datos, consulta legal datos, teléfono abogado datos, contacto compliance Chile, formulario contacto, consultoría Ley 21.719, Santiago abogados',
-	canonical: import.meta.env.SITE + import.meta.env.BASE_URL + 'contacto/',
-	ogTitle: 'Contacto | LegalDatos - Expertos en Protección de Datos',
-	ogDescription: 'Contacta a nuestros expertos en protección de datos personales. Asesoría legal especializada en Ley 21.719. Atención personalizada en Santiago.',
-	ogImage: import.meta.env.SITE + import.meta.env.BASE_URL + 'logo-legaldatos.png'
 };
 
 const hero = {
@@ -144,7 +90,10 @@ const hero = {
 							</label>
 
 							<div class="actions">
-								<button class="btn btn-primary" type="submit">Enviar</button>
+								<button class="submit-btn" type="submit">
+									<span class="btn-text">Enviar Mensaje</span>
+									<span class="btn-icon">→</span>
+								</button>
 								<p class="hint">Se abrirá tu cliente de correo para enviar el mensaje.</p>
 							</div>
 						</form>
@@ -167,10 +116,7 @@ const hero = {
 	.contact-body {
 		padding-top: 28px;
 		padding-bottom: 72px;
-		background:
-			radial-gradient(900px 520px at 10% 0%, rgba(34, 211, 238, 0.14), transparent 55%),
-			radial-gradient(860px 540px at 100% 12%, rgba(42, 55, 85, 0.10), transparent 60%),
-			linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(247, 249, 252, 0.65));
+		background: #f8fafc;
 	}
 
 	.grid {
@@ -181,12 +127,11 @@ const hero = {
 	}
 
 	.panel {
-		background: rgba(255, 255, 255, 0.75);
+		background: rgba(255, 255, 255, 0.95);
 		border: 1px solid rgba(15, 23, 42, 0.10);
-		border-radius: 22px;
-		box-shadow: 0 18px 60px rgba(2, 6, 23, 0.10);
-		backdrop-filter: blur(12px);
-		padding: 22px;
+		border-radius: 16px;
+		box-shadow: 0 4px 20px rgba(2, 6, 23, 0.06);
+		padding: 24px;
 	}
 
 	.panel-title {
@@ -198,7 +143,7 @@ const hero = {
 	}
 
 	.section-subtitle {
-		margin: 0 0 20px;
+		margin: 0 0 24px;
 		font-size: 22px;
 		font-weight: 700;
 		color: var(--primary);
@@ -211,9 +156,9 @@ const hero = {
 	}
 
 	.item {
-		padding: 14px 14px;
-		border-radius: 16px;
-		background: rgba(247, 249, 252, 0.85);
+		padding: 16px 18px;
+		border-radius: 12px;
+		background: rgba(247, 249, 252, 0.9);
 		border: 1px solid rgba(15, 23, 42, 0.08);
 	}
 
@@ -280,15 +225,23 @@ const hero = {
 
 	input,
 	textarea {
-		border-radius: 14px;
-		border: 1px solid rgba(15, 23, 42, 0.14);
+		border-radius: 16px;
+		border: 1px solid rgba(15, 23, 42, 0.10);
 		background: rgba(255, 255, 255, 0.9);
-		padding: 12px 12px;
+		backdrop-filter: blur(8px);
+		padding: 16px 16px;
 		font-size: 16px;
 		font-weight: 600;
 		color: rgba(15, 23, 42, 0.92);
 		outline: none;
-		transition: border-color 160ms ease, box-shadow 160ms ease;
+		transition: all 0.3s ease;
+		position: relative;
+	}
+
+	input::placeholder,
+	textarea::placeholder {
+		color: rgba(15, 23, 42, 0.4);
+		font-weight: 500;
 	}
 
 	textarea {
@@ -299,7 +252,11 @@ const hero = {
 	input:focus,
 	textarea:focus {
 		border-color: rgba(34, 211, 238, 0.55);
-		box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.12);
+		box-shadow: 
+			0 0 0 4px rgba(34, 211, 238, 0.12),
+			0 0 20px rgba(34, 211, 238, 0.15);
+		background: rgba(255, 255, 255, 0.98);
+		transform: translateY(-2px);
 	}
 
 	.actions {
@@ -316,6 +273,69 @@ const hero = {
 		color: var(--muted);
 		font-size: 14px;
 		line-height: 1.5;
+	}
+
+	.submit-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 12px;
+		padding: 16px 32px;
+		border: none;
+		border-radius: 16px;
+		background: linear-gradient(135deg, var(--accent), #7c3aed);
+		color: white;
+		font-size: 16px;
+		font-weight: 700;
+		text-decoration: none;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		position: relative;
+		overflow: hidden;
+		box-shadow: 
+			0 8px 24px rgba(34, 211, 238, 0.3),
+			0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+	}
+
+	.submit-btn::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -100%;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+		transition: left 0.6s ease;
+	}
+
+	.submit-btn:hover {
+		transform: translateY(-2px);
+		box-shadow: 
+			0 12px 32px rgba(34, 211, 238, 0.4),
+			0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+	}
+
+	.submit-btn:hover::before {
+		left: 100%;
+	}
+
+	.submit-btn:active {
+		transform: translateY(0);
+	}
+
+	.btn-text {
+		position: relative;
+		z-index: 1;
+	}
+
+	.btn-icon {
+		font-size: 18px;
+		transition: transform 0.3s ease;
+		position: relative;
+		z-index: 1;
+	}
+
+	.submit-btn:hover .btn-icon {
+		transform: translateX(4px);
 	}
 
 	@media (max-width: 980px) {
