@@ -72,7 +72,6 @@ const actionUrl = `${basePath}/contacto.php`;
 							action={actionUrl}
 							method="POST"
 						>
-							<input type="text" name="_gotcha" class="honeypot" tabindex="-1" autocomplete="off" />
 							<div class="row">
 								<label class="field">
 									<span class="label">Nombre</span>
@@ -147,9 +146,9 @@ const actionUrl = `${basePath}/contacto.php`;
 
 <script>
 	document.addEventListener('DOMContentLoaded', () => {
-		const form = document.getElementById('contactForm');
+		const form = document.getElementById('contactForm') as HTMLFormElement | null;
 		const statusEl = document.getElementById('formMessage');
-		const submitBtn = document.getElementById('submitBtn');
+		const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement | null;
 
 		if (!form || !statusEl || !submitBtn) return;
 
@@ -367,6 +366,13 @@ const actionUrl = `${basePath}/contacto.php`;
 		color: var(--muted);
 		font-size: 14px;
 		line-height: 1.5;
+	}
+
+	.honeypot {
+		position: absolute;
+		left: -9999px;
+		opacity: 0;
+		pointer-events: none;
 	}
 
 	.form-message {
