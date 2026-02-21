@@ -67,6 +67,7 @@ const hero = {
 					<div class="panel">
 						<form
 							class="form"
+							id="contactForm"
 							action="/api/contacto"
 							method="POST"
 						>
@@ -97,6 +98,8 @@ const hero = {
 									<span class="btn-icon">→</span>
 								</button>
 								<p class="hint">Tu mensaje será enviado de forma segura a nuestros servidores.</p>
+								
+								<div id="formMessage" class="form-message"></div>
 							</div>
 						</form>
 					</div>
@@ -105,6 +108,55 @@ const hero = {
 		</div>
 	</section>
 </Layout>
+
+<script>
+	const contactForm = document.getElementById('contactForm');
+	if (!contactForm) return;
+	
+	contactForm.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		
+		const form = e.target as HTMLFormElement;
+		const submitBtn = form.querySelector('.submit-btn') as HTMLButtonElement;
+		const messageDiv = document.getElementById('formMessage');
+		
+		if (!submitBtn || !messageDiv) return;
+		
+		const originalText = submitBtn.innerHTML;
+		
+		// Deshabilitar botón y mostrar loading
+		submitBtn.disabled = true;
+		submitBtn.innerHTML = '<span class="btn-text">Enviando...</span><span class="btn-icon">⏳</span>';
+		messageDiv.textContent = '';
+		messageDiv.className = 'form-message';
+		
+		try {
+			const formData = new FormData(form);
+			const response = await fetch('/api/contacto', {
+				method: 'POST',
+				body: formData
+			});
+			
+			const result = await response.json();
+			
+			if (result.success) {
+				messageDiv.textContent = '✅ Mensaje enviado correctamente. Te responderemos a la brevedad.';
+				messageDiv.classList.add('success');
+				form.reset();
+			} else {
+				messageDiv.textContent = `❌ Error: ${result.error}`;
+				messageDiv.classList.add('error');
+			}
+		} catch (error) {
+			messageDiv.textContent = '❌ Error de conexión. Por favor, intenta nuevamente.';
+			messageDiv.classList.add('error');
+		} finally {
+			// Restaurar botón
+			submitBtn.disabled = false;
+			submitBtn.innerHTML = originalText;
+		}
+	});
+</script>
 
 <style>
 	.page-subtitle {
@@ -277,6 +329,27 @@ const hero = {
 		line-height: 1.5;
 	}
 
+	.form-message {
+		margin-top: 16px;
+		padding: 12px 16px;
+		border-radius: 8px;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 1.4;
+	}
+
+	.form-message.success {
+		background: rgba(34, 197, 94, 0.1);
+		border: 1px solid rgba(34, 197, 94, 0.3);
+		color: #16a34a;
+	}
+
+	.form-message.error {
+		background: rgba(239, 68, 68, 0.1);
+		border: 1px solid rgba(239, 68, 68, 0.3);
+		color: #dc2626;
+	}
+
 	.submit-btn {
 		display: inline-flex;
 		align-items: center;
@@ -365,4 +438,4 @@ const hero = {
 			grid-template-columns: 1fr;
 		}
 	}
-</style>
+</script>
