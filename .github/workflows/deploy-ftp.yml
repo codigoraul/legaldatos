@@ -1,4 +1,4 @@
-name: Deploy to legaldatos.cl/prueba via FTP
+name: Deploy to legaldatos.cl via FTP
 
 on:
   push:

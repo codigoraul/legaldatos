@@ -9,5 +9,5 @@ export default defineConfig({
 		plugins: [tailwindcss()],
 	},
 	trailingSlash: 'always',
-	base: '/prueba/'
+	site: 'https://www.legaldatos.cl'
 });
