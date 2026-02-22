@@ -38,6 +38,7 @@ jobs:
           port: 21
           local-dir: dist/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          state-name: /home/legaldat/public_html/prueba/.ftp-deploy-sync-state.json
           exclude: |
             **/.git*
             **/.git*/**
