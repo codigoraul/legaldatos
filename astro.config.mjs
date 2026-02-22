@@ -8,7 +8,6 @@ export default defineConfig({
 	vite: {
 		plugins: [tailwindcss()],
 	},
-	base: '/prueba/',
 	trailingSlash: 'always',
 	site: 'https://www.legaldatos.cl'
 });
