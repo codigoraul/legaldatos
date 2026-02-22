@@ -17,10 +17,10 @@ Para que el workflow funcione, debes configurar los siguientes secrets en tu rep
 
 | Secret Name | Valor |
 |------------|-------|
-| `FTP_SERVER` | `ftp.elquicapital.cl` |
+| `FTP_SERVER` | `ftp.legaldatos.cl` |
 | `FTP_USERNAME` | `conexion@legaldatos.cl` |
 | `FTP_PASSWORD` | `legalconexion26` |
-| `FTP_SERVER_DIR` | `/home/legaldat/public_html/` |
+| `FTP_PORT` | `21` |
 
 ## Información del Hosting
 
