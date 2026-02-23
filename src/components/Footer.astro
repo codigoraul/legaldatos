@@ -1,8 +1,7 @@
 ---
 const year = new Date().getFullYear();
-const isHomePage = Astro.url.pathname === '/' || Astro.url.pathname === '/prueba/' || Astro.url.pathname.endsWith('/index.html');
-const isDev = import.meta.env.DEV;
-const basePath = isDev ? '' : '/prueba';
+const isHomePage = Astro.url.pathname === '/' || Astro.url.pathname.endsWith('/index.html');
+const basePath = '';
 ---
 
 <footer class="site-footer">

@@ -52,8 +52,7 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params as { slug: string };
-const isDev = import.meta.env.DEV;
-const basePath = isDev ? '' : '/prueba';
+const basePath = '';
 ---
 
 <Layout>

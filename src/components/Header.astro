@@ -1,10 +1,9 @@
 ---
 // Detectar si estamos en la página principal
-const isHomePage = Astro.url.pathname === '/' || Astro.url.pathname === '/prueba/' || Astro.url.pathname.endsWith('/index.html');
+const isHomePage = Astro.url.pathname === '/' || Astro.url.pathname.endsWith('/index.html');
 
 // Detectar si estamos en desarrollo o producción
-const isDev = import.meta.env.DEV;
-const basePath = isDev ? '' : '/prueba';
+const basePath = '';
 
 // Links de navegación según entorno
 const nav = [

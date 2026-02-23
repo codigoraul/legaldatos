@@ -13,8 +13,7 @@ type Servicio = {
 	};
 };
 
-const isDev = import.meta.env.DEV;
-const basePath = isDev ? '' : '/prueba';
+const basePath = '';
 
 export async function getStaticPaths() {
 	const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';

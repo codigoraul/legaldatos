@@ -2,8 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 
 const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
-const isDev = import.meta.env.DEV;
-const basePath = isDev ? '' : '/prueba';
+const basePath = '';
 
 type Post = {
 	id: number;
