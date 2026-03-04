@@ -51,6 +51,19 @@ const hero = {
 		<div class="container two-col">
 			<div class="photo">
 				<img src={`${import.meta.env.BASE_URL}images/Daniel-Manriquez.png`} alt="Daniel Manríquez Sansigolo" loading="lazy" />
+				<a class="photo-linkedin" href="https://www.linkedin.com/in/daniel-manr%C3%ADquez-sansigolo-77968aa1/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn personal de Daniel Manríquez">
+					<svg viewBox="0 0 64 64" aria-hidden="true" role="img">
+						<title>LinkedIn</title>
+						<defs>
+							<linearGradient id="linkedinLogoGrad" x1="0.1" y1="0.05" x2="0.95" y2="0.95" gradientUnits="objectBoundingBox">
+								<stop offset="0%" stop-color="#63d0ff" />
+								<stop offset="100%" stop-color="#0a66c2" />
+							</linearGradient>
+						</defs>
+						<rect width="64" height="64" rx="16" fill="url(#linkedinLogoGrad)" />
+						<path fill="#ffffff" d="M23.3 18a3.3 3.3 0 1 1-6.6 0 3.3 3.3 0 0 1 6.6 0ZM16.8 26.3H23V48h-6.2ZM35.08 26.3h5.9v3.08c1.26-1.94 3.31-3.55 6.85-3.55 6.64 0 7.85 4.01 7.85 9.23V48h-6.2v-11c0-2.62-.05-6-3.67-6-3.68 0-4.25 2.88-4.25 5.84V48h-6.48Z" />
+					</svg>
+				</a>
 				<div class="photo-cap">
 					<div class="name">Daniel Manríquez Sansigolo</div>
 					<div class="role">Socio Fundador | Director Legal</div>
@@ -58,8 +71,7 @@ const hero = {
 			</div>
 			<div class="content">
 				<div class="eyebrow">
-					<span class="icon" aria-hidden="true"></span>
-					<span>Dirección Legal</span>
+					<span class="eyebrow-label">Dirección Legal</span>
 				</div>
 				<p class="p">
 					Abogado de larga trayectoria asesorando empresas en asuntos corporativos complejos, compliance y
@@ -82,15 +94,48 @@ const hero = {
 				</div>
 
 				<h3 class="h3">Trayectoria Profesional</h3>
-					<ul class="p">
-						<li>Magíster en Derecho Corporativo, Universidad Central (2026).</li>
-						<li>Diplomado en Gestión Legal y Responsabilidad de la Empresa, Universidad Central (2025).</li>
-						<li>Diplomado en Responsabilidad Civil, Instituto de Estudios Judiciales (2020).</li>
-						<li>Diplomado en Actualización Jurídica, Instituto de Estudios Judiciales (2019).</li>	
-						<li>Abogado, Universidad Alberto Hurtado (2017).</li>
-							
-
-					</ul>
+				<ul class="academic-list">
+					<li class="academic-item">
+						<span class="academic-icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" focusable="false">
+								<path d="m8 12 3 3 5-6" />
+							</svg>
+						</span>
+						<span>Magíster en Derecho Corporativo, Universidad Central (2026).</span>
+					</li>
+					<li class="academic-item">
+						<span class="academic-icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" focusable="false">
+								<path d="m8 12 3 3 5-6" />
+							</svg>
+						</span>
+						<span>Diplomado en Gestión Legal y Responsabilidad de la Empresa, Universidad Central (2025).</span>
+					</li>
+					<li class="academic-item">
+						<span class="academic-icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" focusable="false">
+								<path d="m8 12 3 3 5-6" />
+							</svg>
+						</span>
+						<span>Diplomado en Responsabilidad Civil, Instituto de Estudios Judiciales (2020).</span>
+					</li>
+					<li class="academic-item">
+						<span class="academic-icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" focusable="false">
+								<path d="m8 12 3 3 5-6" />
+							</svg>
+						</span>
+						<span>Diplomado en Actualización Jurídica, Instituto de Estudios Judiciales (2019).</span>
+					</li>
+					<li class="academic-item">
+						<span class="academic-icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" focusable="false">
+								<path d="m8 12 3 3 5-6" />
+							</svg>
+						</span>
+						<span>Abogado, Universidad Alberto Hurtado (2017).</span>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</section>
@@ -113,6 +158,11 @@ const hero = {
 			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700' viewBox='0 0 1200 700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%2322D3EE' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='%23A855F7' stop-opacity='.25'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23g)' stroke-opacity='.35' stroke-width='2'%3E%3Cpath d='M120 520 L260 420 L420 500 L560 380 L720 440 L900 320 L1080 380'/%3E%3Cpath d='M160 240 L310 310 L480 240 L640 300 L820 220 L980 260'/%3E%3Cpath d='M220 610 L360 560 L520 620 L700 560 L860 610'/%3E%3C/g%3E%3Cg%3E%3Cg fill='%23ffffff' fill-opacity='.08'%3E%3Ccircle cx='120' cy='520' r='10'/%3E%3Ccircle cx='260' cy='420' r='7'/%3E%3Ccircle cx='420' cy='500' r='9'/%3E%3Ccircle cx='560' cy='380' r='8'/%3E%3Ccircle cx='720' cy='440' r='9'/%3E%3Ccircle cx='900' cy='320' r='10'/%3E%3Ccircle cx='1080' cy='380' r='8'/%3E%3Ccircle cx='160' cy='240' r='8'/%3E%3Ccircle cx='310' cy='310' r='10'/%3E%3Ccircle cx='480' cy='240' r='9'/%3E%3Ccircle cx='640' cy='300' r='8'/%3E%3Ccircle cx='820' cy='220' r='9'/%3E%3Ccircle cx='980' cy='260' r='8'/%3E%3C/g%3E%3Cg fill='%2322D3EE' fill-opacity='.10'%3E%3Ccircle cx='720' cy='440' r='18'/%3E%3Ccircle cx='310' cy='310' r='16'/%3E%3Ccircle cx='900' cy='320' r='16'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 		background-size: cover;
 		background-position: center;
+	}
+
+	.section {
+		background: #ffffff;
+		padding: 48px 0 56px;
 	}
 
 	.hero-inner {
@@ -141,10 +191,54 @@ const hero = {
 		line-height: 1.8;
 		color: var(--text);
 	}
-	ul li::marker {
-		color: var(--accent);
-		font-size: 1.2em;
-			
+
+	.academic-list {
+		list-style: none;
+		padding: 0;
+		margin: 6px 0 0;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	.academic-item {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+		font-size: 15px;
+		line-height: 1.3;
+		color: var(--text);
+		margin: 0;
+	}
+
+	.academic-item span:last-child {
+		flex: 1;
+	}
+
+	.academic-icon {
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		background: #fff;
+		border: 1.5px solid rgba(34, 211, 238, 0.9);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		box-shadow: 0 4px 10px rgba(34, 211, 238, 0.08);
+	}
+
+	.academic-icon svg {
+		width: 14px;
+		height: 14px;
+		stroke: #22b7dd;
+		stroke-width: 2.3;
+		fill: none;
+	}
+
+	.academic-icon path {
+		stroke-linecap: round;
+		stroke-linejoin: round;
 	}
 	.accent {
 		color: var(--accent);
@@ -203,11 +297,11 @@ const hero = {
 
 	.two-col {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 28px;
+		grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+		gap: 18px;
 		align-items: start;
-		padding-top: 18px;
-		padding-bottom: 72px;
+		padding-top: 6px;
+		padding-bottom: 42px;
 		max-width: 1200px;
 		margin-left: auto;
 		margin-right: auto;
@@ -218,7 +312,47 @@ const hero = {
 		border-radius: 16px;
 		overflow: hidden;
 		box-shadow: 0 18px 50px rgba(2, 6, 23, 0.15);
-		max-width: 70%;
+		max-width: 78%;
+	}
+
+	.photo-linkedin {
+		position: absolute;
+		right: 18px;
+		bottom: 18px;
+		width: 54px;
+		height: 54px;
+		border-radius: 18px;
+		background:
+			linear-gradient(145deg, #49d5ff, #0c7be0);
+		box-shadow:
+			0 18px 32px rgba(10, 19, 43, 0.32),
+			inset 0 0 18px rgba(255, 255, 255, 0.22);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		cursor: pointer;
+		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+	}
+
+	.photo-linkedin:hover,
+	.photo-linkedin:focus-visible {
+		transform: translateY(-4px) scale(1.06);
+		box-shadow:
+			0 25px 46px rgba(6, 12, 30, 0.45),
+			inset 0 0 20px rgba(255, 255, 255, 0.28);
+		background: linear-gradient(145deg, #6fe1ff, #1990ff);
+	}
+
+	.photo-linkedin:focus-visible {
+		outline: 2px solid rgba(255, 255, 255, 0.75);
+		outline-offset: 3px;
+	}
+
+	.photo-linkedin svg {
+		width: 26px;
+		height: 26px;
+		fill: #ffffff;
 	}
 
 	.photo img {
@@ -241,11 +375,12 @@ const hero = {
 	.name {
 		font-weight: 800;
 		letter-spacing: -0.02em;
+		font-size: 22px;
 	}
 
 	.role {
-		margin-top: 4px;
-		font-size: 12px;
+		margin-top: 6px;
+		font-size: 14px;
 		color: rgba(34, 211, 238, 0.9);
 		font-weight: 700;
 	}
@@ -257,19 +392,14 @@ const hero = {
 	.eyebrow {
 		display: inline-flex;
 		align-items: center;
-		gap: 10px;
 		font-weight: 800;
 		color: var(--text);
 		margin-bottom: 12px;
 	}
 
-	.icon {
-		width: 26px;
-		height: 26px;
-		border-radius: 999px;
-		background: rgba(34, 211, 238, 0.18);
-		border: 1px solid rgba(34, 211, 238, 0.28);
-		display: inline-block;
+	.eyebrow-label {
+		font-size: 20px;
+		letter-spacing: -0.01em;
 	}
 
 	.p {
@@ -288,7 +418,7 @@ const hero = {
 
 	.callout h3 {
 		margin: 0 0 8px;
-		font-size: 14px;
+		font-size: 16px;
 		letter-spacing: -0.01em;
 	}
 
@@ -296,7 +426,7 @@ const hero = {
 		margin: 0;
 		color: var(--muted);
 		line-height: 1.75;
-		font-size: 13px;
+		font-size: 15px;
 	}
 
 	.h3 {
