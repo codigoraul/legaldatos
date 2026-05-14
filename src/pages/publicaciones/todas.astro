@@ -31,6 +31,7 @@ let categories: Category[] = [];
 let totalPosts = 0;
 let loadError: string | null = null;
 let categoryTabs: Array<{ slug: string; name: string }> = [];
+let debugInfo = '';
 
 try {
 	const [catsRes] = await Promise.all([
@@ -54,8 +55,23 @@ try {
 
 	let categoryId: number | undefined;
 	if (selectedCategory !== 'todas') {
-		const category = categories.find((c) => c.slug === selectedCategory);
+		let category = categories.find((c) => c.slug === selectedCategory);
+		
+		if (!category) {
+			const categoryMap: Record<string, string> = {
+				'datos-personales': 'Datos personales',
+				'derecho-laboral': 'Derecho Laboral',
+				'temas-generales': 'Temas generales',
+				'compliance-de-datos': 'Compliance de Datos'
+			};
+			const categoryName = categoryMap[selectedCategory];
+			if (categoryName) {
+				category = categories.find((c) => c.name === categoryName);
+			}
+		}
+		
 		categoryId = category?.id;
+		debugInfo = `Categoría seleccionada: ${selectedCategory}, Encontrada: ${category?.name || 'NO'}, ID: ${categoryId || 'NO ENCONTRADO'}`;
 	}
 
 	const categoryParam = categoryId ? `&categories=${categoryId}` : '';
@@ -118,7 +134,7 @@ const hero = {
 				<nav class="category-tabs">
 					{categoryTabs.map((tab) => (
 						<a
-							href={`/publicaciones/todas/?categoria=${tab.slug}`}
+							href={tab.slug === 'todas' ? '/publicaciones/todas' : `/publicaciones/todas?categoria=${tab.slug}`}
 							class={`tab ${selectedCategory === tab.slug ? 'active' : ''}`}
 						>
 							{tab.name}
@@ -163,7 +179,7 @@ const hero = {
 				{totalPages > 1 && (
 					<nav class="pagination">
 						{currentPage > 1 && (
-							<a href={`/publicaciones/todas/?categoria=${selectedCategory}&page=${currentPage - 1}`} class="page-btn prev">
+							<a href={`/publicaciones/todas?categoria=${selectedCategory}&page=${currentPage - 1}`} class="page-btn prev">
 								← Anterior
 							</a>
 						)}
@@ -173,7 +189,7 @@ const hero = {
 								if (shouldShowPageNumber(pageNum, currentPage, totalPages)) {
 									return (
 										<a
-											href={`/publicaciones/todas/?categoria=${selectedCategory}&page=${pageNum}`}
+											href={`/publicaciones/todas?categoria=${selectedCategory}&page=${pageNum}`}
 											class={`page-num ${pageNum === currentPage ? 'active' : ''}`}
 										>
 											{pageNum}
@@ -183,11 +199,11 @@ const hero = {
 									return <span class="ellipsis">…</span>;
 								}
 								return null;
-							})}
+							})}}
 						</div>
 
 						{currentPage < totalPages && (
-							<a href={`/publicaciones/todas/?categoria=${selectedCategory}&page=${currentPage + 1}`} class="page-btn next">
+							<a href={`/publicaciones/todas?categoria=${selectedCategory}&page=${currentPage + 1}`} class="page-btn next">
 								Siguiente →
 							</a>
 						)}
@@ -207,36 +223,56 @@ const hero = {
 
 	.category-tabs {
 		display: flex;
-		gap: 0;
+		justify-content: center;
+		gap: 8px;
 		margin-bottom: 40px;
-		border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-		overflow-x: auto;
-		-webkit-overflow-scrolling: touch;
+		border-bottom: 2px solid #E5E7EB;
+		flex-wrap: wrap;
 	}
 
 	.tab {
-		padding: 14px 20px;
+		padding: 14px 28px;
 		text-decoration: none;
 		color: #6B7280;
 		font-weight: 500;
-		font-size: 14px;
+		font-size: 15px;
 		white-space: nowrap;
 		border-bottom: 3px solid transparent;
 		margin-bottom: -2px;
-		transition: all 0.2s ease;
+		transition: all 0.25s ease;
 		position: relative;
+		border-radius: 4px 4px 0 0;
 	}
 
 	.tab:hover {
-		color: var(--primary);
-		background: rgba(12, 22, 48, 0.03);
+		color: #0C1630;
+		background: rgba(12, 22, 48, 0.05);
 	}
 
 	.tab.active {
-		color: var(--primary);
-		font-weight: 600;
-		border-bottom-color: var(--primary);
-		background: rgba(12, 22, 48, 0.02);
+		color: #0C1630;
+		font-weight: 700;
+		border-bottom-color: #0C1630;
+		border-bottom-width: 3px;
+		background: rgba(12, 22, 48, 0.04);
+	}
+
+	@media (max-width: 768px) {
+		.category-tabs {
+			justify-content: flex-start;
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+			scrollbar-width: none;
+		}
+
+		.category-tabs::-webkit-scrollbar {
+			display: none;
+		}
+
+		.tab {
+			padding: 12px 20px;
+			font-size: 14px;
+		}
 	}
 
 	.header-info {
