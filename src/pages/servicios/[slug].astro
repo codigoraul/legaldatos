@@ -1,4 +1,5 @@
 ---
+import '../../styles/global.css';
 import Layout from '../../layouts/Layout.astro';
 
 type Servicio = {
@@ -81,7 +82,7 @@ const hero = {
 						<p class="service-subtitle">{servicio.acf.subtitulo}</p>
 					)}
 					
-					<div class="service-body" set:html={servicio.content?.rendered} />
+					<div class="service-body prose prose-slate max-w-none" set:html={servicio.content?.rendered} />
 				</div>
 			</div>
 			
@@ -124,7 +125,7 @@ const hero = {
 	}
 
 	.service-title {
-		font-size: 2.5rem;
+		font-size: 2rem;
 		font-weight: 700;
 		color: var(--foreground);
 		margin: 0;
@@ -132,41 +133,56 @@ const hero = {
 	}
 
 	.service-subtitle {
-		font-size: 1.25rem;
+		font-size: 1.125rem;
 		color: var(--muted-foreground);
 		margin: 0;
 		font-weight: 500;
 	}
 
 	.service-body {
-		font-size: 1.125rem;
+		font-size: 0.9375rem;
 		line-height: 1.7;
 		color: var(--foreground);
 	}
 
+	/* Clases de Tailwind que WordPress genera */
+	.service-body :global(.mb-4) {
+		margin-bottom: 1rem;
+		font-size: 0.9375rem !important;
+	}
+
+	.service-body :global(.mt-8) {
+		margin-top: 2rem;
+	}
+
+	.service-body :global(.text-xl) {
+		font-size: 1.125rem !important;
+		line-height: 1.75rem;
+	}
+
 	.service-body h2 {
-		font-size: 1.875rem;
+		font-size: 1.5rem;
 		margin: 2rem 0 1rem 0;
 		color: var(--foreground);
+		font-weight: 700;
 	}
 
 	.service-body h3 {
-		font-size: 1.5rem;
+		font-size: 1.25rem;
 		margin: 1.5rem 0 0.75rem 0;
 		color: var(--foreground);
+		font-weight: 700;
 	}
 
 	.service-body p {
 		margin: 0 0 1rem 0;
+		font-size: 0.9375rem;
 	}
 
-	.service-body ul, .service-body ol {
-		margin: 1rem 0;
-		padding-left: 2rem;
-	}
-
-	.service-body li {
-		margin: 0.5rem 0;
+	.service-body strong,
+	.service-body b {
+		font-weight: 700;
+		color: #0C1630;
 	}
 
 	.back-link {
