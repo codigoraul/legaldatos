@@ -2,19 +2,6 @@
 import Layout from '../../layouts/Layout.astro';
 
 const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
-const basePath = '';
-
-type Post = {
-	id: number;
-	slug: string;
-	title: { rendered: string };
-	date?: string;
-	categories?: number[];
-	_embedded?: {
-		['wp:featuredmedia']?: Array<{ source_url?: string; alt_text?: string }>;
-		['wp:term']?: Array<Array<{ id: number; name: string; slug: string }>>;
-	};
-};
 
 type Category = {
 	id: number;
@@ -22,198 +9,194 @@ type Category = {
 	slug: string;
 };
 
-const currentPage = parseInt(Astro.url.searchParams.get('page') || '1');
-const selectedCategory = Astro.url.searchParams.get('categoria') || 'todas';
-const postsPerPage = 24;
-
-let allPosts: Post[] = [];
-let categories: Category[] = [];
-let totalPosts = 0;
-let loadError: string | null = null;
-let categoryTabs: Array<{ slug: string; name: string }> = [];
-let debugInfo = '';
+let categoryTabs: Array<{ slug: string; name: string; id: number | null }> = [
+	{ slug: 'todas', name: 'Todas', id: null },
+];
 
 try {
-	const [catsRes] = await Promise.all([
-		fetch(`${WP_BASE}/wp-json/wp/v2/categories?per_page=100`, {
-			headers: { Accept: 'application/json' },
-		}),
-	]);
-
-	if (!catsRes.ok) throw new Error(`WP categories ${catsRes.status}`);
-	categories = (await catsRes.json()) as Category[];
-
-	const targetCategories = ['Datos personales', 'Derecho Laboral', 'Temas generales', 'Compliance de datos'];
-	const filteredCategories = categories.filter((c) => 
-		targetCategories.some((target) => c.name.toLowerCase() === target.toLowerCase())
-	);
-
-	categoryTabs = [
-		{ slug: 'todas', name: 'Todas' },
-		...filteredCategories.map((c) => ({ slug: c.slug, name: c.name }))
-	];
-
-	let categoryId: number | undefined;
-	let selectedCategoryName = 'Todas';
-	
-	if (selectedCategory !== 'todas') {
-		const category = categories.find((c) => c.slug === selectedCategory);
-		
-		if (category) {
-			categoryId = category.id;
-			selectedCategoryName = category.name;
-			debugInfo = `Filtrando por: ${category.name} (ID: ${category.id})`;
-		} else {
-			debugInfo = `⚠️ Categoría "${selectedCategory}" no encontrada`;
-		}
+	const catsRes = await fetch(`${WP_BASE}/wp-json/wp/v2/categories?per_page=100`, {
+		headers: { Accept: 'application/json' },
+	});
+	if (catsRes.ok) {
+		const categories: Category[] = await catsRes.json();
+		const targetCategories = ['Datos personales', 'Derecho Laboral', 'Temas generales', 'Compliance de datos'];
+		const filtered = categories.filter((c) =>
+			targetCategories.some((t) => c.name.toLowerCase() === t.toLowerCase())
+		);
+		categoryTabs = [
+			{ slug: 'todas', name: 'Todas', id: null },
+			...filtered.map((c) => ({ slug: c.slug, name: c.name, id: c.id })),
+		];
 	}
-
-	const categoryParam = categoryId ? `&categories=${categoryId}` : '';
-	const postsRes = await fetch(
-		`${WP_BASE}/wp-json/wp/v2/posts?_embed&per_page=${postsPerPage}&page=${currentPage}${categoryParam}`,
-		{
-			headers: { Accept: 'application/json' },
-		}
-	);
-
-	if (!postsRes.ok) throw new Error(`WP posts ${postsRes.status}`);
-
-	totalPosts = parseInt(postsRes.headers.get('X-WP-Total') || '0');
-	allPosts = (await postsRes.json()) as Post[];
-} catch (e) {
-	loadError = e instanceof Error ? e.message : 'Error desconocido';
+} catch (_) {
+	// tabs show only "Todas" on error
 }
 
-const totalPages = Math.ceil(totalPosts / postsPerPage);
-
-const formatDate = (dateStr?: string) => {
-	if (!dateStr) return '';
-	const date = new Date(dateStr);
-	return date.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' });
-};
-
-const getCategoryNames = (post: Post) => {
-	const terms = post._embedded?.['wp:term']?.[0];
-	if (!terms || terms.length === 0) return '';
-	return terms.map((t) => t.name).join(', ');
-};
-
-const shouldShowPageNumber = (pageNum: number, current: number, total: number) => {
-	if (pageNum === 1 || pageNum === total) return true;
-	const minPage = current - 2;
-	const maxPage = current + 2;
-	if (pageNum >= minPage && pageNum < maxPage + 1) return true;
-	return false;
-};
-
-const shouldShowEllipsis = (pageNum: number, current: number) => {
-	return pageNum === current - 3 || pageNum === current + 3;
-};
-
-const hero = {
-	title: 'Todas las Publicaciones',
-};
+const hero = { title: 'Todas las Publicaciones' };
 ---
 
 <Layout hero={hero}>
-	{loadError ? (
-		<section class="section">
-			<div class="container">
-				<p style="margin: 0; color: rgba(185, 28, 28, 0.9);">No se pudo cargar desde WordPress ({WP_BASE}). Error: {loadError}</p>
+	<section class="pub-section">
+		<div class="container">
+			<nav class="category-tabs">
+				{categoryTabs.map((tab) => (
+					<a
+						href={tab.slug === 'todas' ? '/publicaciones/todas/' : `/publicaciones/todas/?categoria=${tab.slug}`}
+						class="tab"
+						data-slug={tab.slug}
+					>
+						{tab.name}
+					</a>
+				))}
+			</nav>
+
+			<div id="section-header" class="section-header" style="display:none">
+				<h2 class="section-title" id="section-title"></h2>
+				<p class="section-count" id="section-count"></p>
 			</div>
-		</section>
-	) : (
-		<section class="pub-section">
-			<div class="container">
-				<nav class="category-tabs">
-					{categoryTabs.map((tab) => (
-						<a
-							href={tab.slug === 'todas' ? '/publicaciones/todas' : `/publicaciones/todas?categoria=${tab.slug}`}
-							class={`tab ${selectedCategory === tab.slug ? 'active' : ''}`}
-						>
-							{tab.name}
-						</a>
-					))}
-				</nav>
 
-				{allPosts.length === 0 ? (
-					<p class="empty">No hay publicaciones disponibles.</p>
-				) : (
-					<>
-						{selectedCategory !== 'todas' && (
-							<div class="section-header">
-								<h2 class="section-title">{selectedCategoryName}</h2>
-								<p class="section-count">{totalPosts} publicaciones</p>
-							</div>
-						)}
-						
-						<div class="grid">
-							{allPosts.map((post) => {
-								const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-								const alt = post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? post.title?.rendered;
-								const url = `${basePath}/articulos/${post.slug}/`;
-								const dateLabel = formatDate(post.date);
-								const categoryNames = getCategoryNames(post);
-								return (
-									<article class="pub-card">
-										<a href={url} class="card-link">
-											{image ? (
-												<img src={image} alt={alt} loading="lazy" class="thumb" />
-											) : (
-												<div class="thumb-placeholder"></div>
-											)}
-											<div class="card-content">
-												{categoryNames && <span class="category">{categoryNames}</span>}
-												<h3 class="card-title" set:html={post.title?.rendered} />
-												{dateLabel && <span class="date">{dateLabel}</span>}
-											</div>
-										</a>
-									</article>
-								);
-							})}
-						</div>
-					</>
-				)}
-
-				{totalPages > 1 && (
-					<nav class="pagination">
-						{currentPage > 1 && (
-							<a href={`/publicaciones/todas?categoria=${selectedCategory}&page=${currentPage - 1}`} class="page-btn prev">
-								← Anterior
-							</a>
-						)}
-						
-						<div class="page-numbers">
-							{Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
-								if (shouldShowPageNumber(pageNum, currentPage, totalPages)) {
-									return (
-										<a
-											href={`/publicaciones/todas?categoria=${selectedCategory}&page=${pageNum}`}
-											class={`page-num ${pageNum === currentPage ? 'active' : ''}`}
-										>
-											{pageNum}
-										</a>
-									);
-								} else if (shouldShowEllipsis(pageNum, currentPage)) {
-									return <span class="ellipsis">…</span>;
-								}
-								return null;
-							})}}
-						</div>
-
-						{currentPage < totalPages && (
-							<a href={`/publicaciones/todas?categoria=${selectedCategory}&page=${currentPage + 1}`} class="page-btn next">
-								Siguiente →
-							</a>
-						)}
-					</nav>
-				)}
+			<div id="posts-container">
+				<div class="loading-state">
+					<p>Cargando publicaciones…</p>
+				</div>
 			</div>
-		</section>
-	)}
+
+			<nav id="pagination" class="pagination"></nav>
+		</div>
+	</section>
 </Layout>
 
-<style>
+<script define:vars={{ WP_BASE, categoryTabs }}>
+	const PER_PAGE = 24;
+
+	function getParams() {
+		const p = new URLSearchParams(window.location.search);
+		return {
+			categoria: p.get('categoria') || 'todas',
+			page: parseInt(p.get('page') || '1'),
+		};
+	}
+
+	function formatDate(dateStr) {
+		if (!dateStr) return '';
+		return new Date(dateStr).toLocaleDateString('es-CL', {
+			day: 'numeric',
+			month: 'long',
+			year: 'numeric',
+		});
+	}
+
+	function setActiveTabs(categoria) {
+		document.querySelectorAll('.tab').forEach((tab) => {
+			tab.classList.toggle('active', tab.dataset.slug === categoria);
+		});
+	}
+
+	function renderPagination(current, total, categoria) {
+		const nav = document.getElementById('pagination');
+		if (total <= 1) { nav.innerHTML = ''; return; }
+
+		const catParam = categoria !== 'todas' ? `categoria=${categoria}&` : '';
+		let html = '';
+
+		if (current > 1) {
+			html += `<a href="/publicaciones/todas/?${catParam}page=${current - 1}" class="page-btn">← Anterior</a>`;
+		}
+
+		html += '<div class="page-numbers">';
+		for (let i = 1; i <= total; i++) {
+			const show = i === 1 || i === total || (i >= current - 2 && i <= current + 2);
+			const ellipsis = i === current - 3 || i === current + 3;
+			if (show) {
+				html += `<a href="/publicaciones/todas/?${catParam}page=${i}" class="page-num${i === current ? ' active' : ''}">${i}</a>`;
+			} else if (ellipsis) {
+				html += `<span class="ellipsis">…</span>`;
+			}
+		}
+		html += '</div>';
+
+		if (current < total) {
+			html += `<a href="/publicaciones/todas/?${catParam}page=${current + 1}" class="page-btn">Siguiente →</a>`;
+		}
+
+		nav.innerHTML = html;
+	}
+
+	function renderGrid(posts, total, categoria, page, categoryName) {
+		const container = document.getElementById('posts-container');
+		const header = document.getElementById('section-header');
+		const titleEl = document.getElementById('section-title');
+		const countEl = document.getElementById('section-count');
+		const totalPages = Math.ceil(total / PER_PAGE);
+
+		if (categoria !== 'todas' && categoryName) {
+			header.style.display = 'block';
+			titleEl.textContent = categoryName;
+			countEl.textContent = `${total} publicaciones`;
+		} else {
+			header.style.display = 'none';
+		}
+
+		if (posts.length === 0) {
+			container.innerHTML = '<p class="empty">No hay publicaciones disponibles.</p>';
+			renderPagination(1, 0, categoria);
+			return;
+		}
+
+		const cards = posts.map((post) => {
+			const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+			const alt = (post._embedded?.['wp:featuredmedia']?.[0]?.alt_text || post.title?.rendered || '').replace(/"/g, '&quot;');
+			const url = `/articulos/${post.slug}/`;
+			const dateLabel = formatDate(post.date);
+			const terms = post._embedded?.['wp:term']?.[0];
+			const cats = terms?.map((t) => t.name).join(', ') || '';
+
+			return `<article class="pub-card">
+				<a href="${url}" class="card-link">
+					${image ? `<img src="${image}" alt="${alt}" loading="lazy" class="thumb" />` : `<div class="thumb-placeholder"></div>`}
+					<div class="card-content">
+						${cats ? `<span class="category">${cats}</span>` : ''}
+						<h3 class="card-title">${post.title?.rendered || ''}</h3>
+						${dateLabel ? `<span class="date">${dateLabel}</span>` : ''}
+					</div>
+				</a>
+			</article>`;
+		});
+
+		container.innerHTML = `<div class="grid">${cards.join('')}</div>`;
+		renderPagination(page, totalPages, categoria);
+	}
+
+	async function loadPosts() {
+		const { categoria, page } = getParams();
+		setActiveTabs(categoria);
+
+		try {
+			const tab = categoryTabs.find((t) => t.slug === categoria);
+			const categoryId = tab?.id ?? null;
+			const categoryName = tab?.name ?? '';
+
+			const catParam = categoryId ? `&categories=${categoryId}` : '';
+			const res = await fetch(
+				`${WP_BASE}/wp-json/wp/v2/posts?_embed&per_page=${PER_PAGE}&page=${page}${catParam}`
+			);
+
+			if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+			const total = parseInt(res.headers.get('X-WP-Total') || '0');
+			const posts = await res.json();
+
+			renderGrid(posts, total, categoria, page, categoryName);
+		} catch (e) {
+			document.getElementById('posts-container').innerHTML =
+				'<p class="empty">Error al cargar publicaciones. Intenta de nuevo.</p>';
+		}
+	}
+
+	loadPosts();
+</script>
+
+<style is:global>
 	.pub-section {
 		padding: 80px 0;
 		background: #fff;
@@ -239,7 +222,6 @@ const hero = {
 		border-bottom: 3px solid transparent;
 		margin-bottom: -2px;
 		transition: all 0.25s ease;
-		position: relative;
 		border-radius: 4px 4px 0 0;
 	}
 
@@ -263,15 +245,8 @@ const hero = {
 			-webkit-overflow-scrolling: touch;
 			scrollbar-width: none;
 		}
-
-		.category-tabs::-webkit-scrollbar {
-			display: none;
-		}
-
-		.tab {
-			padding: 12px 20px;
-			font-size: 14px;
-		}
+		.category-tabs::-webkit-scrollbar { display: none; }
+		.tab { padding: 12px 20px; font-size: 14px; }
 	}
 
 	.section-header {
@@ -292,21 +267,17 @@ const hero = {
 		margin: 0;
 	}
 
-	.header-info {
-		margin-bottom: 32px;
+	.loading-state {
 		text-align: center;
-	}
-
-	.total-count {
-		color: var(--muted);
-		font-size: 14px;
-		margin: 0;
+		padding: 60px 0;
+		color: #6B7280;
 	}
 
 	.empty {
 		text-align: center;
-		color: var(--muted);
+		color: #6B7280;
 		font-size: 16px;
+		padding: 60px 0;
 	}
 
 	.grid {
@@ -348,9 +319,7 @@ const hero = {
 		background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
 	}
 
-	.card-content {
-		padding: 16px;
-	}
+	.card-content { padding: 16px; }
 
 	.category {
 		display: inline-block;
@@ -370,9 +339,7 @@ const hero = {
 		color: var(--primary);
 	}
 
-	.card-link:hover .card-title {
-		color: var(--accent);
-	}
+	.card-link:hover .card-title { color: var(--accent); }
 
 	.date {
 		display: block;
@@ -400,9 +367,7 @@ const hero = {
 		transition: background 0.2s ease;
 	}
 
-	.page-btn:hover {
-		background: var(--accent);
-	}
+	.page-btn:hover { background: var(--accent); }
 
 	.page-numbers {
 		display: flex;
@@ -425,9 +390,7 @@ const hero = {
 		border: 1px solid rgba(0, 0, 0, 0.1);
 	}
 
-	.page-num:hover {
-		background: rgba(0, 0, 0, 0.05);
-	}
+	.page-num:hover { background: rgba(0, 0, 0, 0.05); }
 
 	.page-num.active {
 		background: var(--primary);
@@ -441,41 +404,18 @@ const hero = {
 	}
 
 	@media (max-width: 1100px) {
-		.grid {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
-		}
+		.grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 	}
 
 	@media (max-width: 768px) {
-		.grid {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			gap: 16px;
-		}
-
-		.pub-section {
-			padding: 48px 0;
-		}
-
-		.pagination {
-			flex-wrap: wrap;
-			gap: 8px;
-		}
-
-		.page-btn {
-			padding: 8px 16px;
-			font-size: 13px;
-		}
-
-		.page-num {
-			width: 36px;
-			height: 36px;
-			font-size: 13px;
-		}
+		.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+		.pub-section { padding: 48px 0; }
+		.pagination { flex-wrap: wrap; gap: 8px; }
+		.page-btn { padding: 8px 16px; font-size: 13px; }
+		.page-num { width: 36px; height: 36px; font-size: 13px; }
 	}
 
 	@media (max-width: 480px) {
-		.grid {
-			grid-template-columns: 1fr;
-		}
+		.grid { grid-template-columns: 1fr; }
 	}
 </style>
