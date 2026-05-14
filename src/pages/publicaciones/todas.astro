@@ -1,0 +1,352 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Fragment } from 'astro/components';
+
+const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
+const basePath = '';
+
+type Post = {
+	id: number;
+	slug: string;
+	title: { rendered: string };
+	date?: string;
+	categories?: number[];
+	_embedded?: {
+		['wp:featuredmedia']?: Array<{ source_url?: string; alt_text?: string }>;
+		['wp:term']?: Array<Array<{ id: number; name: string; slug: string }>>;
+	};
+};
+
+type Category = {
+	id: number;
+	name: string;
+	slug: string;
+};
+
+const currentPage = parseInt(Astro.url.searchParams.get('page') || '1');
+const postsPerPage = 24;
+
+let allPosts: Post[] = [];
+let categories: Category[] = [];
+let totalPosts = 0;
+let loadError: string | null = null;
+
+try {
+	const [postsRes, catsRes] = await Promise.all([
+		fetch(`${WP_BASE}/wp-json/wp/v2/posts?_embed&per_page=${postsPerPage}&page=${currentPage}`, {
+			headers: { Accept: 'application/json' },
+		}),
+		fetch(`${WP_BASE}/wp-json/wp/v2/categories?per_page=100`, {
+			headers: { Accept: 'application/json' },
+		}),
+	]);
+
+	if (!postsRes.ok) throw new Error(`WP posts ${postsRes.status}`);
+	if (!catsRes.ok) throw new Error(`WP categories ${catsRes.status}`);
+
+	totalPosts = parseInt(postsRes.headers.get('X-WP-Total') || '0');
+	allPosts = (await postsRes.json()) as Post[];
+	categories = (await catsRes.json()) as Category[];
+} catch (e) {
+	loadError = e instanceof Error ? e.message : 'Error desconocido';
+}
+
+const totalPages = Math.ceil(totalPosts / postsPerPage);
+
+const formatDate = (dateStr?: string) => {
+	if (!dateStr) return '';
+	const date = new Date(dateStr);
+	return date.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' });
+};
+
+const getCategoryNames = (post: Post) => {
+	const terms = post._embedded?.['wp:term']?.[0];
+	if (!terms || terms.length === 0) return '';
+	return terms.map((t) => t.name).join(', ');
+};
+
+const hero = {
+	title: 'Todas las Publicaciones',
+};
+---
+
+<Layout hero={hero}>
+	{loadError ? (
+		<section class="section">
+			<div class="container">
+				<p style="margin: 0; color: rgba(185, 28, 28, 0.9);">No se pudo cargar desde WordPress ({WP_BASE}). Error: {loadError}</p>
+			</div>
+		</section>
+	) : (
+		<section class="pub-section">
+			<div class="container">
+				<div class="header-info">
+					<p class="total-count">Mostrando {allPosts.length} de {totalPosts} publicaciones</p>
+				</div>
+
+				{allPosts.length === 0 ? (
+					<p class="empty">No hay publicaciones disponibles.</p>
+				) : (
+					<div class="grid">
+						{allPosts.map((post) => {
+							const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+							const alt = post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? post.title?.rendered;
+							const url = `${basePath}/articulos/${post.slug}/`;
+							const dateLabel = formatDate(post.date);
+							const categoryNames = getCategoryNames(post);
+							return (
+								<article class="pub-card">
+									<a href={url} class="card-link">
+										{image ? (
+											<img src={image} alt={alt} loading="lazy" class="thumb" />
+										) : (
+											<div class="thumb-placeholder"></div>
+										)}
+										<div class="card-content">
+											{categoryNames && <span class="category">{categoryNames}</span>}
+											<h3 class="card-title" set:html={post.title?.rendered} />
+											{dateLabel && <span class="date">{dateLabel}</span>}
+										</div>
+									</a>
+								</article>
+							);
+						})}
+					</div>
+				)}
+
+				{totalPages > 1 && (
+					<nav class="pagination">
+						{currentPage > 1 && (
+							<a href={`/publicaciones/todas/?page=${currentPage - 1}`} class="page-btn prev">
+								← Anterior
+							</a>
+						)}
+						
+						<div class="page-numbers">
+							{Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
+								if (
+									pageNum === 1 ||
+									pageNum === totalPages ||
+									(pageNum >= currentPage - 2 && pageNum <= currentPage + 2)
+								) {
+									return (
+										<a
+											href={`/publicaciones/todas/?page=${pageNum}`}
+											class={`page-num ${pageNum === currentPage ? 'active' : ''}`}
+										>
+											{pageNum}
+										</a>
+									);
+								} else if (pageNum === currentPage - 3 || pageNum === currentPage + 3) {
+									return <span class="ellipsis">…</span>;
+								}
+								return null;
+							})}
+						</div>
+
+						{currentPage < totalPages && (
+							<a href={`/publicaciones/todas/?page=${currentPage + 1}`} class="page-btn next">
+								Siguiente →
+							</a>
+						)}
+					</nav>
+				)}
+			</div>
+		</section>
+	)}
+</Layout>
+
+<style>
+	.pub-section {
+		padding: 80px 0;
+		background: #fff;
+		min-height: 60vh;
+	}
+
+	.header-info {
+		margin-bottom: 32px;
+		text-align: center;
+	}
+
+	.total-count {
+		color: var(--muted);
+		font-size: 14px;
+		margin: 0;
+	}
+
+	.empty {
+		text-align: center;
+		color: var(--muted);
+		font-size: 16px;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 24px;
+		margin-bottom: 48px;
+	}
+
+	.pub-card {
+		background: #fff;
+		border-radius: 12px;
+		overflow: hidden;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		border: 1px solid rgba(0, 0, 0, 0.08);
+	}
+
+	.pub-card:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+	}
+
+	.card-link {
+		display: block;
+		text-decoration: none;
+		height: 100%;
+	}
+
+	.thumb {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+		display: block;
+	}
+
+	.thumb-placeholder {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+	}
+
+	.card-content {
+		padding: 16px;
+	}
+
+	.category {
+		display: inline-block;
+		font-size: 11px;
+		font-weight: 600;
+		text-transform: uppercase;
+		color: var(--accent);
+		margin-bottom: 8px;
+		letter-spacing: 0.5px;
+	}
+
+	.card-title {
+		font-size: 16px;
+		font-weight: 600;
+		line-height: 1.4;
+		margin: 0 0 8px;
+		color: var(--primary);
+	}
+
+	.card-link:hover .card-title {
+		color: var(--accent);
+	}
+
+	.date {
+		display: block;
+		font-size: 12px;
+		color: var(--muted);
+		text-transform: capitalize;
+	}
+
+	.pagination {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
+		margin-top: 48px;
+	}
+
+	.page-btn {
+		padding: 10px 20px;
+		background: var(--primary);
+		color: white;
+		text-decoration: none;
+		border-radius: 8px;
+		font-weight: 600;
+		font-size: 14px;
+		transition: background 0.2s ease;
+	}
+
+	.page-btn:hover {
+		background: var(--accent);
+	}
+
+	.page-numbers {
+		display: flex;
+		gap: 6px;
+		align-items: center;
+	}
+
+	.page-num {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		border-radius: 8px;
+		text-decoration: none;
+		color: var(--primary);
+		font-weight: 500;
+		font-size: 14px;
+		transition: all 0.2s ease;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+	}
+
+	.page-num:hover {
+		background: rgba(0, 0, 0, 0.05);
+	}
+
+	.page-num.active {
+		background: var(--primary);
+		color: white;
+		border-color: var(--primary);
+	}
+
+	.ellipsis {
+		color: var(--muted);
+		padding: 0 4px;
+	}
+
+	@media (max-width: 1100px) {
+		.grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 768px) {
+		.grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 16px;
+		}
+
+		.pub-section {
+			padding: 48px 0;
+		}
+
+		.pagination {
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+
+		.page-btn {
+			padding: 8px 16px;
+			font-size: 13px;
+		}
+
+		.page-num {
+			width: 36px;
+			height: 36px;
+			font-size: 13px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

@@ -112,27 +112,34 @@ const sections = [
 						{section.posts.length === 0 ? (
 							<p class="empty">No hay publicaciones en esta categoría.</p>
 						) : (
-							<div class="grid">
-								{section.posts.map((post) => {
-									const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-									const alt = post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? post.title?.rendered;
-									const url = `${basePath}/articulos/${post.slug}/`;
-									const dateLabel = formatDate(post.date);
-									return (
-										<article class="pub-card">
-											{dateLabel && <span class="date">{dateLabel}</span>}
-											<a href={url} class="card-link">
-												{image ? (
-													<img src={image} alt={alt} loading="lazy" class="thumb" />
-												) : (
-													<div class="thumb-placeholder"></div>
-												)}
-												<h3 class="card-title" set:html={post.title?.rendered} />
-											</a>
-										</article>
-									);
-								})}
-							</div>
+							<>
+								<div class="grid">
+									{section.posts.map((post) => {
+										const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+										const alt = post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? post.title?.rendered;
+										const url = `${basePath}/articulos/${post.slug}/`;
+										const dateLabel = formatDate(post.date);
+										return (
+											<article class="pub-card">
+												{dateLabel && <span class="date">{dateLabel}</span>}
+												<a href={url} class="card-link">
+													{image ? (
+														<img src={image} alt={alt} loading="lazy" class="thumb" />
+													) : (
+														<div class="thumb-placeholder"></div>
+													)}
+													<h3 class="card-title" set:html={post.title?.rendered} />
+												</a>
+											</article>
+										);
+									})}
+								</div>
+								<div class="view-all-container">
+									<a href={`${basePath}/publicaciones/todas/`} class="view-all-btn">
+										Ver todas las publicaciones →
+									</a>
+								</div>
+							</>
 						)}
 					</div>
 				</section>
@@ -279,6 +286,41 @@ const sections = [
 
 	.card-link:hover .card-title {
 		text-decoration: underline;
+	}
+
+	.view-all-container {
+		text-align: center;
+		margin-top: 32px;
+	}
+
+	.view-all-btn {
+		display: inline-block;
+		padding: 12px 32px;
+		background: transparent;
+		color: var(--primary);
+		border: 2px solid var(--primary);
+		border-radius: 8px;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 14px;
+		transition: all 0.2s ease;
+	}
+
+	.dark-bg .view-all-btn {
+		color: rgba(255, 255, 255, 0.9);
+		border-color: rgba(255, 255, 255, 0.3);
+	}
+
+	.view-all-btn:hover {
+		background: var(--primary);
+		color: white;
+		transform: translateY(-2px);
+	}
+
+	.dark-bg .view-all-btn:hover {
+		background: rgba(255, 255, 255, 0.1);
+		border-color: rgba(255, 255, 255, 0.5);
+		color: white;
 	}
 
 	@media (max-width: 1100px) {
