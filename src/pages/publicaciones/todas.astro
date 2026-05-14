@@ -90,7 +90,9 @@ const getCategoryNames = (post: Post) => {
 
 const shouldShowPageNumber = (pageNum: number, current: number, total: number) => {
 	if (pageNum === 1 || pageNum === total) return true;
-	if (pageNum >= current - 2 && pageNum <= current + 2) return true;
+	const minPage = current - 2;
+	const maxPage = current + 2;
+	if (pageNum >= minPage && pageNum < maxPage + 1) return true;
 	return false;
 };
 
