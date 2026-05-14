@@ -68,7 +68,7 @@ const filterByCategory = (posts: Post[], catId: number | undefined) => {
 	return posts.filter((p) => p.categories?.includes(catId));
 };
 
-const postsDatosLaborales = filterByCategories(allPosts, [datosPersonalesCatId, derechoLaboralCatId]).slice(0, 12);
+const postsDatosLaborales = filterByCategories(allPosts, [datosPersonalesCatId, derechoLaboralCatId]).slice(0, 6);
 const postsTemasGenerales = filterByCategory(allPosts, temasGeneralesCatId).slice(0, 12);
 const postsCompliance = filterByCategory(allPosts, complianceCatId).slice(0, 12);
 

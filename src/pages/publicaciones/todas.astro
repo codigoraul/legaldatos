@@ -1,6 +1,5 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { Fragment } from 'astro/components';
 
 const WP_BASE = import.meta.env.PUBLIC_WP_URL ?? 'http://localhost:10189';
 const basePath = '';
@@ -24,29 +23,53 @@ type Category = {
 };
 
 const currentPage = parseInt(Astro.url.searchParams.get('page') || '1');
+const selectedCategory = Astro.url.searchParams.get('categoria') || 'todas';
 const postsPerPage = 24;
 
 let allPosts: Post[] = [];
 let categories: Category[] = [];
 let totalPosts = 0;
 let loadError: string | null = null;
+let categoryTabs: Array<{ slug: string; name: string }> = [];
 
 try {
-	const [postsRes, catsRes] = await Promise.all([
-		fetch(`${WP_BASE}/wp-json/wp/v2/posts?_embed&per_page=${postsPerPage}&page=${currentPage}`, {
-			headers: { Accept: 'application/json' },
-		}),
+	const [catsRes] = await Promise.all([
 		fetch(`${WP_BASE}/wp-json/wp/v2/categories?per_page=100`, {
 			headers: { Accept: 'application/json' },
 		}),
 	]);
 
-	if (!postsRes.ok) throw new Error(`WP posts ${postsRes.status}`);
 	if (!catsRes.ok) throw new Error(`WP categories ${catsRes.status}`);
+	categories = (await catsRes.json()) as Category[];
+
+	const targetCategories = ['Datos personales', 'Derecho Laboral', 'Temas generales', 'Compliance de datos'];
+	const filteredCategories = categories.filter((c) => 
+		targetCategories.some((target) => c.name.toLowerCase() === target.toLowerCase())
+	);
+
+	categoryTabs = [
+		{ slug: 'todas', name: 'Todas' },
+		...filteredCategories.map((c) => ({ slug: c.slug, name: c.name }))
+	];
+
+	let categoryId: number | undefined;
+	if (selectedCategory !== 'todas') {
+		const category = categories.find((c) => c.slug === selectedCategory);
+		categoryId = category?.id;
+	}
+
+	const categoryParam = categoryId ? `&categories=${categoryId}` : '';
+	const postsRes = await fetch(
+		`${WP_BASE}/wp-json/wp/v2/posts?_embed&per_page=${postsPerPage}&page=${currentPage}${categoryParam}`,
+		{
+			headers: { Accept: 'application/json' },
+		}
+	);
+
+	if (!postsRes.ok) throw new Error(`WP posts ${postsRes.status}`);
 
 	totalPosts = parseInt(postsRes.headers.get('X-WP-Total') || '0');
 	allPosts = (await postsRes.json()) as Post[];
-	categories = (await catsRes.json()) as Category[];
 } catch (e) {
 	loadError = e instanceof Error ? e.message : 'Error desconocido';
 }
@@ -65,6 +88,16 @@ const getCategoryNames = (post: Post) => {
 	return terms.map((t) => t.name).join(', ');
 };
 
+const shouldShowPageNumber = (pageNum: number, current: number, total: number) => {
+	if (pageNum === 1 || pageNum === total) return true;
+	if (pageNum >= current - 2 && pageNum <= current + 2) return true;
+	return false;
+};
+
+const shouldShowEllipsis = (pageNum: number, current: number) => {
+	return pageNum === current - 3 || pageNum === current + 3;
+};
+
 const hero = {
 	title: 'Todas las Publicaciones',
 };
@@ -80,6 +113,17 @@ const hero = {
 	) : (
 		<section class="pub-section">
 			<div class="container">
+				<nav class="category-tabs">
+					{categoryTabs.map((tab) => (
+						<a
+							href={`/publicaciones/todas/?categoria=${tab.slug}`}
+							class={`tab ${selectedCategory === tab.slug ? 'active' : ''}`}
+						>
+							{tab.name}
+						</a>
+					))}
+				</nav>
+
 				<div class="header-info">
 					<p class="total-count">Mostrando {allPosts.length} de {totalPosts} publicaciones</p>
 				</div>
@@ -117,27 +161,23 @@ const hero = {
 				{totalPages > 1 && (
 					<nav class="pagination">
 						{currentPage > 1 && (
-							<a href={`/publicaciones/todas/?page=${currentPage - 1}`} class="page-btn prev">
+							<a href={`/publicaciones/todas/?categoria=${selectedCategory}&page=${currentPage - 1}`} class="page-btn prev">
 								← Anterior
 							</a>
 						)}
 						
 						<div class="page-numbers">
 							{Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
-								if (
-									pageNum === 1 ||
-									pageNum === totalPages ||
-									(pageNum >= currentPage - 2 && pageNum <= currentPage + 2)
-								) {
+								if (shouldShowPageNumber(pageNum, currentPage, totalPages)) {
 									return (
 										<a
-											href={`/publicaciones/todas/?page=${pageNum}`}
+											href={`/publicaciones/todas/?categoria=${selectedCategory}&page=${pageNum}`}
 											class={`page-num ${pageNum === currentPage ? 'active' : ''}`}
 										>
 											{pageNum}
 										</a>
 									);
-								} else if (pageNum === currentPage - 3 || pageNum === currentPage + 3) {
+								} else if (shouldShowEllipsis(pageNum, currentPage)) {
 									return <span class="ellipsis">…</span>;
 								}
 								return null;
@@ -145,7 +185,7 @@ const hero = {
 						</div>
 
 						{currentPage < totalPages && (
-							<a href={`/publicaciones/todas/?page=${currentPage + 1}`} class="page-btn next">
+							<a href={`/publicaciones/todas/?categoria=${selectedCategory}&page=${currentPage + 1}`} class="page-btn next">
 								Siguiente →
 							</a>
 						)}
@@ -161,6 +201,40 @@ const hero = {
 		padding: 80px 0;
 		background: #fff;
 		min-height: 60vh;
+	}
+
+	.category-tabs {
+		display: flex;
+		gap: 0;
+		margin-bottom: 40px;
+		border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.tab {
+		padding: 14px 20px;
+		text-decoration: none;
+		color: #6B7280;
+		font-weight: 500;
+		font-size: 14px;
+		white-space: nowrap;
+		border-bottom: 3px solid transparent;
+		margin-bottom: -2px;
+		transition: all 0.2s ease;
+		position: relative;
+	}
+
+	.tab:hover {
+		color: var(--primary);
+		background: rgba(12, 22, 48, 0.03);
+	}
+
+	.tab.active {
+		color: var(--primary);
+		font-weight: 600;
+		border-bottom-color: var(--primary);
+		background: rgba(12, 22, 48, 0.02);
 	}
 
 	.header-info {
