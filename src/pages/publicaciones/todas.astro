@@ -54,24 +54,18 @@ try {
 	];
 
 	let categoryId: number | undefined;
+	let selectedCategoryName = 'Todas';
+	
 	if (selectedCategory !== 'todas') {
-		let category = categories.find((c) => c.slug === selectedCategory);
+		const category = categories.find((c) => c.slug === selectedCategory);
 		
-		if (!category) {
-			const categoryMap: Record<string, string> = {
-				'datos-personales': 'Datos personales',
-				'derecho-laboral': 'Derecho Laboral',
-				'temas-generales': 'Temas generales',
-				'compliance-de-datos': 'Compliance de Datos'
-			};
-			const categoryName = categoryMap[selectedCategory];
-			if (categoryName) {
-				category = categories.find((c) => c.name === categoryName);
-			}
+		if (category) {
+			categoryId = category.id;
+			selectedCategoryName = category.name;
+			debugInfo = `Filtrando por: ${category.name} (ID: ${category.id})`;
+		} else {
+			debugInfo = `⚠️ Categoría "${selectedCategory}" no encontrada`;
 		}
-		
-		categoryId = category?.id;
-		debugInfo = `Categoría seleccionada: ${selectedCategory}, Encontrada: ${category?.name || 'NO'}, ID: ${categoryId || 'NO ENCONTRADO'}`;
 	}
 
 	const categoryParam = categoryId ? `&categories=${categoryId}` : '';
@@ -142,38 +136,43 @@ const hero = {
 					))}
 				</nav>
 
-				<div class="header-info">
-					<p class="total-count">Mostrando {allPosts.length} de {totalPosts} publicaciones</p>
-				</div>
-
 				{allPosts.length === 0 ? (
 					<p class="empty">No hay publicaciones disponibles.</p>
 				) : (
-					<div class="grid">
-						{allPosts.map((post) => {
-							const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-							const alt = post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? post.title?.rendered;
-							const url = `${basePath}/articulos/${post.slug}/`;
-							const dateLabel = formatDate(post.date);
-							const categoryNames = getCategoryNames(post);
-							return (
-								<article class="pub-card">
-									<a href={url} class="card-link">
-										{image ? (
-											<img src={image} alt={alt} loading="lazy" class="thumb" />
-										) : (
-											<div class="thumb-placeholder"></div>
-										)}
-										<div class="card-content">
-											{categoryNames && <span class="category">{categoryNames}</span>}
-											<h3 class="card-title" set:html={post.title?.rendered} />
-											{dateLabel && <span class="date">{dateLabel}</span>}
-										</div>
-									</a>
-								</article>
-							);
-						})}
-					</div>
+					<>
+						{selectedCategory !== 'todas' && (
+							<div class="section-header">
+								<h2 class="section-title">{selectedCategoryName}</h2>
+								<p class="section-count">{totalPosts} publicaciones</p>
+							</div>
+						)}
+						
+						<div class="grid">
+							{allPosts.map((post) => {
+								const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+								const alt = post._embedded?.['wp:featuredmedia']?.[0]?.alt_text ?? post.title?.rendered;
+								const url = `${basePath}/articulos/${post.slug}/`;
+								const dateLabel = formatDate(post.date);
+								const categoryNames = getCategoryNames(post);
+								return (
+									<article class="pub-card">
+										<a href={url} class="card-link">
+											{image ? (
+												<img src={image} alt={alt} loading="lazy" class="thumb" />
+											) : (
+												<div class="thumb-placeholder"></div>
+											)}
+											<div class="card-content">
+												{categoryNames && <span class="category">{categoryNames}</span>}
+												<h3 class="card-title" set:html={post.title?.rendered} />
+												{dateLabel && <span class="date">{dateLabel}</span>}
+											</div>
+										</a>
+									</article>
+								);
+							})}
+						</div>
+					</>
 				)}
 
 				{totalPages > 1 && (
@@ -273,6 +272,24 @@ const hero = {
 			padding: 12px 20px;
 			font-size: 14px;
 		}
+	}
+
+	.section-header {
+		margin: 48px 0 32px;
+		text-align: center;
+	}
+
+	.section-title {
+		font-size: 32px;
+		font-weight: 700;
+		color: #0C1630;
+		margin: 0 0 8px;
+	}
+
+	.section-count {
+		font-size: 14px;
+		color: #6B7280;
+		margin: 0;
 	}
 
 	.header-info {
